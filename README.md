@@ -1,158 +1,258 @@
-# Chicken-Disease-Classification--Project
+# 🐔 ChickTech — AI-Powered Chicken Disease Diagnosis
 
+> An end-to-end **Machine Learning + Web Application** that detects chicken diseases from images using AI.  
+> Built with **Flask**, **Next.js**, and **Deep Learning**, and deployable via **AWS** or **Azure** CI/CD pipelines.
 
-## Workflows
+---
 
-1. Update config.yaml
-2. Update secrets.yaml [Optional]
-3. Update params.yaml
-4. Update the entity
-5. Update the configuration manager in src config
-6. Update the components
-7. Update the pipeline 
-8. Update the main.py
-9. Update the dvc.yaml
+## 🚀 Tech Stack
 
+| Layer | Technologies Used |
+|-------|--------------------|
+| **Frontend** | Next.js 14, TypeScript, Tailwind CSS, GSAP Animations |
+| **Backend / API** | Flask (Python), REST API |
+| **Machine Learning** | TensorFlow / Keras, OpenCV, DVC Pipelines |
+| **Database / Storage** | AWS S3, Azure Container Registry |
+| **CI/CD** | GitHub Actions, Docker, AWS EC2 / Azure Web App |
+| **Version Control** | Git, Git LFS (for large models) |
 
-# How to run?
-### STEPS:
+---
 
-Clone the repository
+## 🧠 Core Features
 
+✅ AI-based chicken disease classification from image uploads  
+✅ Confidence-level visualization with smooth animations  
+✅ Cure & prevention recommendation system  
+✅ Multi-lingual interface (English + Hindi)  
+✅ Secure `.env` and `.gitignore` handling  
+✅ Integrated with Git LFS for large ML models  
+✅ AWS & Azure ready deployment pipelines  
+
+---
+
+## 🗂️ Project Structure
+
+Chicken-Disease-Classification-Projects/
+│
+├── frontend/ # Next.js app (UI)
+│ ├── app/
+│ ├── components/
+│ ├── public/
+│ ├── package.json
+│
+├── src/ # Core ML & pipeline source
+│ ├── components/
+│ ├── config/
+│ ├── entity/
+│ ├── pipeline/
+│ └── utils/
+│
+├── artifacts/ # Model artifacts (.h5, .keras)
+├── static/ # Static assets
+├── templates/ # Flask templates
+├── config/ # YAML configuration files
+├── logs/ # Training & runtime logs
+│
+├── app.py # Flask app entry point
+├── main.py # ML pipeline entry
+├── requirements.txt # Python dependencies
+├── Dockerfile # Container setup
+├── dvc.yaml # DVC workflow definition
+└── README.md # You are here
+
+yaml
+Copy code
+
+---
+
+## ⚙️ Setup Instructions
+
+### 🧩 Step 1 — Clone the Repository
 ```bash
-https://github.com/entbappy/Chicken-Disease-Classification--Project
-```
-### STEP 01- Create a conda environment after opening the repository
+git clone https://github.com/KunalBishwal/ChickTech-AI-Diagnosis.git
+cd ChickTech-AI-Diagnosis
+🐍 Step 2 — Backend Setup (Flask + ML)
+Create & activate virtual environment:
 
-```bash
+bash
+Copy code
 conda create -n cnncls python=3.8 -y
-```
-
-```bash
 conda activate cnncls
-```
+Install dependencies:
 
-
-### STEP 02- install the requirements
-```bash
+bash
+Copy code
 pip install -r requirements.txt
-```
+Run Flask backend:
 
-
-```bash
-# Finally run the following command
+bash
+Copy code
 python app.py
-```
+Then visit:
 
-Now,
-```bash
-open up you local host and port
-```
+cpp
+Copy code
+http://127.0.0.1:5000/
+💻 Step 3 — Frontend Setup (Next.js)
+Navigate to frontend folder:
 
+bash
+Copy code
+cd frontend
+npm install
+npm run dev
+Then open:
 
-### DVC cmd
+arduino
+Copy code
+http://localhost:3000
+🧰 Step 4 — DVC Commands (for ML Pipelines)
+bash
+Copy code
+dvc init
+dvc repro
+dvc dag
+These manage your model training, tracking, and reproducibility.
 
-1. dvc init
-2. dvc repro
-3. dvc dag
+☁️ Deployment Options
+🔹 AWS Deployment (with GitHub Actions)
+1. Create IAM User with:
+AmazonEC2FullAccess
 
+AmazonEC2ContainerRegistryFullAccess
 
-
-# AWS-CICD-Deployment-with-Github-Actions
-
-## 1. Login to AWS console.
-
-## 2. Create IAM user for deployment
-
-	#with specific access
-
-	1. EC2 access : It is virtual machine
-
-	2. ECR: Elastic Container registry to save your docker image in aws
-
-
-	#Description: About the deployment
-
-	1. Build docker image of the source code
-
-	2. Push your docker image to ECR
-
-	3. Launch Your EC2 
-
-	4. Pull Your image from ECR in EC2
-
-	5. Lauch your docker image in EC2
-
-	#Policy:
-
-	1. AmazonEC2ContainerRegistryFullAccess
-
-	2. AmazonEC2FullAccess
-
-	
-## 3. Create ECR repo to store/save docker image
-    - Save the URI: 566373416292.dkr.ecr.us-east-1.amazonaws.com/chicken
-
-	
-## 4. Create EC2 machine (Ubuntu) 
-
-## 5. Open EC2 and Install docker in EC2 Machine:
-	
-	
-	#optinal
-
-	sudo apt-get update -y
-
-	sudo apt-get upgrade
-	
-	#required
-
-	curl -fsSL https://get.docker.com -o get-docker.sh
-
-	sudo sh get-docker.sh
-
-	sudo usermod -aG docker ubuntu
-
-	newgrp docker
-	
-# 6. Configure EC2 as self-hosted runner:
-    setting>actions>runner>new self hosted runner> choose os> then run command one by one
-
-
-# 7. Setup github secrets:
-
-    AWS_ACCESS_KEY_ID=
-
-    AWS_SECRET_ACCESS_KEY=
-
-    AWS_REGION = us-east-1
-
-    AWS_ECR_LOGIN_URI = demo>>  566373416292.dkr.ecr.ap-south-1.amazonaws.com
-
-    ECR_REPOSITORY_NAME = simple-app
-
-
-
-
-# AZURE-CICD-Deployment-with-Github-Actions
-
-## Save pass:
-
-s3cEZKH5yytiVnJ3h+eI3qhhzf9q1vNwEi6+q+WGdd+ACRCZ7JD6
-
-
-## Run from terminal:
-
+2. Setup GitHub Secrets
+ini
+Copy code
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_REGION=us-east-1
+AWS_ECR_LOGIN_URI=566373416292.dkr.ecr.us-east-1.amazonaws.com
+ECR_REPOSITORY_NAME=chicktech
+3. Build & Push Docker Image
+bash
+Copy code
+docker build -t chickenapp .
+docker tag chickenapp:latest <ECR_URI>/chicken:latest
+docker push <ECR_URI>/chicken:latest
+🔹 Azure Deployment (Alternative)
+bash
+Copy code
 docker build -t chickenapp.azurecr.io/chicken:latest .
-
 docker login chickenapp.azurecr.io
-
 docker push chickenapp.azurecr.io/chicken:latest
+Then deploy via Azure App Service → Container Settings.
 
+🧑‍💻 Developer Workflow
+Edit YAML configs → config.yaml, params.yaml
 
-## Deployment Steps:
+Update entities → /src/entity/
 
-1. Build the Docker image of the Source Code
-2. Push the Docker image to Container Registry
-3. Launch the Web App Server in Azure 
-4. Pull the Docker image from the container registry to Web App server and run 
+Modify components → /src/components/
+
+Update pipelines → /src/pipeline/
+
+Test with → python main.py
+
+Track model changes → dvc repro
+
+🔐 Security & Best Practices
+Environment variables stored in .env.local and ignored in .gitignore
+
+Sensitive keys (Google API, Azure Registry) are not committed
+
+Git LFS handles large files like .h5, .keras, and .mp4
+
+DVC ensures reproducibility for ML pipelines
+
+🧾 Recommended .gitignore
+gitignore
+Copy code
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+
+# Python
+__pycache__/
+*.pyc
+venv/
+logs/
+
+# Node / Next.js
+node_modules/
+.next/
+
+# ML artifacts
+artifacts/
+*.h5
+*.keras
+*.mp4
+research/
+static/
+
+# OS / misc
+.DS_Store
+*.log
+🧪 Example API Usage
+bash
+Copy code
+POST /predict
+Content-Type: multipart/form-data
+Body: { "image": "<chicken_image.jpg>" }
+Response:
+
+json
+Copy code
+{
+  "prediction": "Coccidiosis Detected",
+  "confidence": "97.43%"
+}
+🧱 CI/CD Workflow (Simplified)
+yaml
+Copy code
+# .github/workflows/deploy.yml
+
+name: Deploy to AWS
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+          docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_LOGIN_URI }}
+
+      - name: Build Docker image
+        run: docker build -t chicktech .
+
+      - name: Push Docker image
+        run: |
+          docker tag chicktech:latest ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
+          docker push ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
+🌐 Live Deployment (Optional)
+Once deployed, access via:
+
+cpp
+Copy code
+https://<your-aws-or-azure-url>/
+💬 Contributing
+Pull requests are welcome!
+Please open an issue first to discuss changes or feature requests.
+
+📜 License
+This project is licensed under the MIT License.
+Feel free to use and modify it with proper attribution.
+
+🧑‍🏫 Author
+Kunal Bishwal
+📍 AI Developer | Full-Stack Engineer
+💼 LinkedIn • GitHub
