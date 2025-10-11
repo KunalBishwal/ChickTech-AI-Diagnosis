@@ -28,3 +28,33 @@ venv/
 *.tar
 *.gz
 
+# Node / Next.js
+node_modules/
+.next/
+.env
+.env.local
+.env.production
+.env.development
+
+# Python / Flask
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs
+logs/
+*.log
+
+# Large files
+*.h5
+*.keras
+*.mp4
+*.mp3
+*.zip
+
+# Artifacts / Checkpoints
+artifacts/
+research/
+static/
