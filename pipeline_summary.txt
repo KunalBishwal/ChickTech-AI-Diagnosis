@@ -1,0 +1,89 @@
+#####################################################################
+##  MLOps Pipeline Walkthrough: Chicken Disease Classification     ##
+#####################################################################
+
+This document explains the step-by-step process of the MLOps pipeline, from downloading the raw data to having a fully trained and evaluated model ready for prediction. The entire process is defined in the `dvc.yaml` file and can be executed with the `dvc repro` command.
+
+
+=====================================================================
+### Stage 1: Data Ingestion (Getting the Raw Materials)
+=====================================================================
+
+* **Purpose:** To download the raw dataset from its source and prepare it for the project by unzipping it.
+
+* **Script:** `src/cnnClassifier/pipeline/stage_01_data_ingestion.py`
+
+* **Process:**
+    1.  The script reads the `config/config.yaml` file to get configuration details, including the data source URL.
+    2.  It downloads the `data.zip` file containing all the raw images.
+    3.  It creates the necessary directory structure under the `artifacts/` folder.
+    4.  The downloaded `data.zip` is unzipped into `artifacts/data_ingestion/`. 
+    This results in a folder named `Chicken-fecal-images` which contains two sub-folders: `Coccidiosis` and `Healthy`, 
+    with the images sorted accordingly.
+
+
+=====================================================================
+### Stage 2: Prepare Base Model (Building the Engine)
+=====================================================================
+
+* **Purpose:** To create the foundational deep learning model using a powerful technique called Transfer Learning. We don't build 
+a model from zero; we adapt a pre-existing, world-class model.
+
+* **Script:** `src/cnnClassifier/pipeline/stage_02_prepare_base_model.py`
+
+* **Process:**
+    1.  The script reads model parameters from `params.yaml` (like image size, number of classes, etc.).
+    2.  It downloads the **VGG16** model, which has been pre-trained by Google on millions of images. The final, original 
+    classification layer is intentionally removed.
+    3.  The weights of all the downloaded VGG16 layers are "frozen," meaning their learned knowledge will not be altered during our training.
+    4.  A new, custom classification head is added to the model. This consists of a `Flatten` layer and a final `Dense` 
+    layer with 2 outputs (for "Healthy" and "Coccidiosis").
+    5.  This new, combined model structure is saved as `base_model.h5` in the `artifacts/prepare_base_model/` directory.
+
+
+=====================================================================
+### Stage 3: Model Training (The Learning Phase)
+=====================================================================
+
+* **Purpose:** To take the base model and train it on our specific chicken images. This is where the core image preprocessing and learning happens.
+
+* **Script:** `src/cnnClassifier/pipeline/stage_03_training.py`
+
+* **Process:**
+    1.  The base model created in Stage 2 is loaded.
+    2.  An `ImageDataGenerator` is configured. This tool is responsible for crucial on-the-fly preprocessing of our images:
+        * **Resizing:** All images are resized to the standard 224x224 pixels required by the VGG16 model.
+        * **Normalization:** Pixel values (0-255) are rescaled to be between 0 and 1, which helps the model train more effectively.
+        * **Data Augmentation:** To make the model more robust, the generator creates modified versions of the training 
+        images in real-time by applying random shears, zooms, and flips.
+    3.  Callbacks are prepared, including `ModelCheckpoint`, which monitors the training process and saves only the 
+    best-performing version of the model.
+    4.  The `model.fit()` function is called, which starts the training. The `ImageDataGenerator` 
+    feeds the preprocessed and augmented images to the model for the number of epochs specified in `params.yaml`.
+    5.  The final, trained model is saved as `model.h5` in the `artifacts/training/` directory.
+
+
+=====================================================================
+### Stage 4: Model Evaluation (The Final Exam)
+=====================================================================
+
+* **Purpose:** To test our newly trained model on a set of images it has never seen before.
+ This gives us an unbiased score of how well it will perform in the real world.
+
+* **Script:** `src/cnnClassifier/pipeline/stage_04_evaluation.py`
+
+* **Process:**
+    1.  The final `model.h5` from the training stage is loaded.
+    2.  The validation (test) dataset is loaded and preprocessed (resized and normalized), but **without** data augmentation.
+    3.  The `model.evaluate()` function is run on this test data.
+    4.  The final scores for **loss** and **accuracy** are calculated.
+    5.  These scores are saved to the `scores.json` file for our records.
+
+
+=====================================================================
+### Final Outcome: Ready for Prediction
+=====================================================================
+
+After these four stages are complete, the pipeline has produced 
+a fully trained and validated deep learning model located at `artifacts/training/model.h5`. 
+This model is now ready to be used by the Flask web application (`app.py`) for making real-time predictions on new images that you upload.

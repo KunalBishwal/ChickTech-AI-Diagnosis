@@ -1,0 +1,164 @@
+(cnnClassifier) C:\Python\ML project\Chicken-Disease-Classification-Projects>dvc repro
+Stage 'data_ingestion' didn't change, skipping
+Stage 'prepare_base_model' didn't change, skipping
+Running stage 'training':
+> python src/cnnClassifier/pipeline/stage_03_training.py
+[2025-09-08 22:16:01,667: INFO: stage_03_training: *******************]
+[2025-09-08 22:16:01,667: INFO: stage_03_training: >>>>>> stage Training started <<<<<<]
+[2025-09-08 22:16:01,672: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2025-09-08 22:16:01,677: INFO: common: yaml file: params.yaml loaded successfully]
+[2025-09-08 22:16:01,679: INFO: common: created directory at: artifacts]
+[2025-09-08 22:16:01,679: INFO: common: created directory at: artifacts\prepare_callbacks\checkpoint_dir]
+[2025-09-08 22:16:01,680: INFO: common: created directory at: artifacts\prepare_callbacks\tensorboard_log_dir]
+[2025-09-08 22:16:01,683: INFO: common: created directory at: artifacts\training]
+2025-09-08 22:16:01.761547: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE SSE2 SSE3 SSE4.1 SSE4.2 AVX AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Found 78 images belonging to 2 classes.
+Found 312 images belonging to 2 classes.
+
+Total params: 14764866 (56.32 MB)
+Trainable params: 9489410 (36.20 MB)
+Non-trainable params: 5275456 (20.12 MB)
+
+Epoch 1/10
+19/19 [==============================] - ETA: 0s - loss: 14.8073 - accuracy: 0.5034C:\Users\Kunal\miniconda3\envs\cnnClassifier\lib\site-packages\keras\src\engine\training.py:3000: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+  saving_api.save_model(
+19/19 [==============================] - 67s 4s/step - loss: 14.8073 - accuracy: 0.5034 - val_loss: 26.9207 - val_accuracy: 0.3906
+Epoch 2/10
+19/19 [==============================] - 60s 3s/step - loss: 8.9815 - accuracy: 0.5608 - val_loss: 14.1773 - val_accuracy: 0.6094
+Epoch 3/10
+19/19 [==============================] - 60s 3s/step - loss: 2.1394 - accuracy: 0.8514 - val_loss: 2.8456 - val_accuracy: 0.7656
+Epoch 4/10
+19/19 [==============================] - 56s 3s/step - loss: 2.2519 - accuracy: 0.7872 - val_loss: 0.9714 - val_accuracy: 0.9062
+Epoch 5/10
+19/19 [==============================] - 56s 3s/step - loss: 1.4937 - accuracy: 0.8520 - val_loss: 0.8147 - val_accuracy: 0.9375
+Epoch 6/10
+19/19 [==============================] - 56s 3s/step - loss: 0.7292 - accuracy: 0.9054 - val_loss: 0.8532 - val_accuracy: 0.9219
+Epoch 7/10
+19/19 [==============================] - 56s 3s/step - loss: 2.2396 - accuracy: 0.8074 - val_loss: 0.8701 - val_accuracy: 0.9219
+Epoch 8/10
+19/19 [==============================] - 58s 3s/step - loss: 0.4067 - accuracy: 0.9358 - val_loss: 0.8983 - val_accuracy: 0.9219
+Epoch 9/10
+19/19 [==============================] - 58s 3s/step - loss: 0.4654 - accuracy: 0.8986 - val_loss: 0.9174 - val_accuracy: 0.9062
+Epoch 10/10
+19/19 [==============================] - ETA: 0s - loss: 0.6994 - accuracy: 0.9088Restoring model weights from the end of the best epoch: 5.
+19/19 [==============================] - 57s 3s/step - loss: 0.6994 - accuracy: 0.9088 - val_loss: 1.8962 - val_accuracy: 0.7812
+Epoch 10: early stopping
+[2025-09-08 22:25:46,874: INFO: stage_03_training: >>>>>> stage Training completed <<<<<<
+x==========x]
+
+Updating lock file 'dvc.lock'
+Running stage 'evaluation':
+> python src/cnnClassifier/pipeline/stage_04_evaluation.py
+[2025-09-08 22:25:54,904: INFO: stage_04_evaluation: *******************]
+[2025-09-08 22:25:54,905: INFO: stage_04_evaluation: >>>>>> stage Evaluation stage started <<<<<<]
+[2025-09-08 22:25:54,911: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2025-09-08 22:25:54,914: INFO: common: yaml file: params.yaml loaded successfully]
+[2025-09-08 22:25:54,916: INFO: common: created directory at: artifacts]
+2025-09-08 22:25:54.988206: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE SSE2 SSE3 SSE4.1 SSE4.2 AVX AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Found 116 images belonging to 2 classes.
+8/8 [==============================] - 18s 2s/step - loss: 0.5612 - accuracy: 0.9569
+[2025-09-08 22:26:13,925: INFO: common: json file saved at: scores.json]
+[2025-09-08 22:26:13,926: INFO: stage_04_evaluation: >>>>>> stage Evaluation stage completed <<<<<<x==========x]
+
+model's accuracy on the test set has jumped from 91.4% to 95.7%.
+
+
+95.7% to 98.28%
+Running stage 'training':
+> python src/cnnClassifier/pipeline/stage_03_training.py
+[2025-09-14 15:40:07,779: INFO: stage_03_training: *******************]
+[2025-09-14 15:40:07,779: INFO: stage_03_training: >>>>>> stage Training started <<<<<<]
+[2025-09-14 15:40:07,785: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2025-09-14 15:40:07,788: INFO: common: yaml file: params.yaml loaded successfully]
+[2025-09-14 15:40:07,790: INFO: common: created directory at: artifacts]
+[2025-09-14 15:40:07,791: INFO: common: created directory at: artifacts\prepare_callbacks\checkpoint_dir]
+[2025-09-14 15:40:07,802: INFO: common: created directory at: artifacts\prepare_callbacks\tensorboard_log_dir]
+[2025-09-14 15:40:07,808: INFO: common: created directory at: artifacts\training]
+2025-09-14 15:40:07.870428: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE SSE2 SSE3 SSE4.1 SSE4.2 AVX AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[2025-09-14 15:40:10,358: WARNING: optimizer: Skipping variable loading for optimizer 'Adam', because it has 21 variables whereas the saved optimizer has 1 variables. ]
+Found 78 images belonging to 2 classes.
+Found 312 images belonging to 2 classes.
+Epoch 1/25
+19/19 [==============================] - ETA: 0s - loss: 0.8396 - accuracy: 0.7669C:\Users\Kunal\miniconda3\envs\cnnClassifier\lib\site-packages\keras\src\engine\training.py:3000: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+  saving_api.save_model(
+19/19 [==============================] - 79s 4s/step - loss: 0.8396 - accuracy: 0.7669 - val_loss: 0.3658 - val_accuracy: 0.8438 - lr: 5.0000e-04
+Epoch 2/25
+19/19 [==============================] - 89s 5s/step - loss: 0.2427 - accuracy: 0.9189 - val_loss: 0.1177 - val_accuracy: 0.9531 - lr: 5.0000e-04
+Epoch 3/25
+19/19 [==============================] - 85s 4s/step - loss: 0.3292 - accuracy: 0.9054 - val_loss: 0.3359 - val_accuracy: 0.8906 - lr: 5.0000e-04
+Epoch 4/25
+19/19 [==============================] - ETA: 0s - loss: 0.2169 - accuracy: 0.9309  
+Epoch 4: ReduceLROnPlateau reducing learning rate to 0.00010000000474974513.
+19/19 [==============================] - 100s 5s/step - loss: 0.2169 - accuracy: 0.9309 - val_loss: 0.1555 - val_accuracy: 0.9688 - lr: 5.0000e-04
+Epoch 5/25
+19/19 [==============================] - 91s 5s/step - loss: 0.1137 - accuracy: 0.9797 - val_loss: 0.0914 - val_accuracy: 0.9688 - lr: 1.0000e-04
+Epoch 6/25
+19/19 [==============================] - 92s 5s/step - loss: 0.1150 - accuracy: 0.9662 - val_loss: 0.0850 - val_accuracy: 0.9688 - lr: 1.0000e-04
+Epoch 7/25
+19/19 [==============================] - 92s 5s/step - loss: 0.0860 - accuracy: 0.9797 - val_loss: 0.0823 - val_accuracy: 0.9688 - lr: 1.0000e-04
+Epoch 8/25
+19/19 [==============================] - 104s 6s/step - loss: 0.0598 - accuracy: 0.9764 - val_loss: 0.0863 - val_accuracy: 0.9688 - lr: 1.0000e-04
+Epoch 9/25
+19/19 [==============================] - ETA: 0s - loss: 0.0393 - accuracy: 0.9764  
+Epoch 9: ReduceLROnPlateau reducing learning rate to 2.0000000949949027e-05.
+19/19 [==============================] - 97s 5s/step - loss: 0.0393 - accuracy: 0.9764 - val_loss: 0.0898 - val_accuracy: 0.9688 - lr: 1.0000e-04
+Epoch 10/25
+19/19 [==============================] - 94s 5s/step - loss: 0.0441 - accuracy: 0.9831 - val_loss: 0.0896 - val_accuracy: 0.9688 - lr: 2.0000e-05
+Epoch 11/25
+19/19 [==============================] - ETA: 0s - loss: 0.0651 - accuracy: 0.9797  
+Epoch 11: ReduceLROnPlateau reducing learning rate to 1e-05.
+19/19 [==============================] - 92s 5s/step - loss: 0.0651 - accuracy: 0.9797 - val_loss: 0.0982 - val_accuracy: 0.9688 - lr: 2.0000e-05
+Epoch 12/25
+19/19 [==============================] - ETA: 0s - loss: 0.0458 - accuracy: 0.9831Restoring model weights from the end of the best epoch: 7.
+19/19 [==============================] - 100s 5s/step - loss: 0.0458 - accuracy: 0.9831 - val_loss: 0.0923 - val_accuracy: 0.9688 - lr: 1.0000e-05
+Epoch 12: early stopping
+[2025-09-14 15:58:47,763: INFO: stage_03_training: >>>>>> stage Training completed <<<<<<
+
+x==========x]
+Updating lock file 'dvc.lock'
+
+Running stage 'evaluation':
+> python src/cnnClassifier/pipeline/stage_04_evaluation.py
+[2025-09-14 15:59:01,341: INFO: stage_04_evaluation: *******************]
+[2025-09-14 15:59:01,341: INFO: stage_04_evaluation: >>>>>> stage Evaluation stage started <<<<<<]
+[2025-09-14 15:59:01,350: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2025-09-14 15:59:01,355: INFO: common: yaml file: params.yaml loaded successfully]
+[2025-09-14 15:59:01,357: INFO: common: created directory at: artifacts]
+2025-09-14 15:59:01.542057: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE SSE2 SSE3 SSE4.1 SSE4.2 AVX AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Found 116 images belonging to 2 classes.
+8/8 [==============================] - 29s 4s/step - loss: 0.0499 - accuracy: 0.9828
+[2025-09-14 15:59:36,679: INFO: common: json file saved at: scores.json]
+[2025-09-14 15:59:36,680: INFO: stage_04_evaluation: >>>>>> stage Evaluation stage completed <<<<<<
+
+x==========x]
+
+
+
+src\cnnClassifier\components\prepare_callbacks.py
+Inside the new function, we set up the rules for Early Stopping:
+monitor="val_loss": This tells the system to watch the validation loss. This is the most important metric 
+because it measures the model's error on data it hasn't seen during training.
+
+patience=5: This is how patient the system will be. It will wait for 5 epochs, 
+and if the validation loss doesn't improve within that time, it will stop the training.
+
+verbose=1: This simply prints a message on the screen when training is stopped, so you know that the callback was triggered.
+
+restore_best_weights=True: When training stops, this command ensures the model's 
+final state is reset back to the weights from its single best-performing epoch, not the last one it completed.
+
+| Metric                              | Value    | Interpretation                                                                                          |
+| ----------------------------------- | -------- | ------------------------------------------------------------------------------------------------------- |
+| **Loss (Categorical Crossentropy)** | `0.0498` | Very low — model’s prediction confidence is strong and well-calibrated.                            |
+| **Accuracy**                        | `0.9827` | Outstanding — 98.27% of predictions are correct. 
+                                                    This aligns perfectly with your existing site results. |
+| **MSE**                             | `0.0172` | Tiny error — indicates that predicted classes are extremely close to true classes numerically.          |
+| **MAE**                             | `0.0172` | Matches MSE — good consistency; only ~1.7% misclassification rate.                                      |
+| **RMSE**                            | `0.1313` | Square-root of MSE; small value confirms low prediction deviation.                                      |
+| **F1-Score**                        | `0.9827` | Excellent balance between precision and recall — model handles both positive and negative cases well.   |
+| **Precision**                       | `0.9827` | 98.27% of predicted “disease labels” are correct — low false positives.                                 |
+| **Recall**                          | `0.9827` | 98.27% of actual diseased chickens are detected — low false negatives.                                  |

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Vet Assistant - Coccidiosis Classifier</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="particles-js"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <a href="#app" class="logo"><span class="logo-icon">🐔</span><span class="logo-text">AI Vet Assistant</span></a>
+      <div class="nav-links">
+        <a href="#app">Classifier</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Classifier Section -->
+    <section id="app" class="app-section">
+      <div class="card" data-tilt>
+        <header>
+          <h1>Chicken Disease Classification</h1>
+          <p>Upload an image to classify if it's from a healthy chicken or one with Coccidiosis.</p>
+        </header>
+
+        <div class="content-wrapper">
+          <!-- Upload Column -->
+          <div class="column uploader-column">
+            <div id="drop-zone">
+              <div id="drop-zone-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
+                  <path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 
+                           0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194
+                           C12.923 3.999 10.69 2 8 2zm2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707
+                           L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2z"/>
+                </svg>
+                <p>Drag & Drop Image Here, or Click to Select</p>
+              </div>
+              <img id="image-preview" src="#" alt="Image Preview"/>
+            </div>
+            <!-- Custom File Input -->
+            <input type="file" id="file-input" accept="image/*">
+            <label for="file-input" class="custom-file-btn">Choose File</label>
+
+            <!-- Classify Button -->
+            <button id="predict-button">Classify Image</button>
+          </div>
+
+          <!-- Result Column -->
+          <div class="column result-column">
+            <div id="spinner"></div>
+            <section id="result-section">
+              <h2>Prediction Result</h2>
+              <p id="prediction-text"></p>
+              <p id="confidence-score"></p>
+              <a href="/coccidiosis" id="info-button" class="info-button" target="_blank">More Info</a>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="info-section">
+      <div class="card" data-tilt>
+        <h2>About This Project</h2>
+        <p>This AI Vet Assistant is a tool designed to aid in the early detection of Coccidiosis in chickens...</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="contact" class="footer">
+    <div class="card" data-tilt>
+      <h2>Get in Touch</h2>
+      <p>Connect through the following platforms:</p>
+      <div class="social-links">
+        <a href="mailto:your.email@example.com" title="Email" target="_blank">📧</a>
+        <a href="tel:+1234567890" title="Phone">📞</a>
+        <a href="https://www.linkedin.com/in/yourprofile" title="LinkedIn" target="_blank">💼</a>
+        <a href="https://www.instagram.com/yourprofile" title="Instagram" target="_blank">📷</a>
+        <a href="https://twitter.com/yourhandle" title="Twitter" target="_blank">🐦</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
