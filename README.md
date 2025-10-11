@@ -31,7 +31,7 @@
 ---
 
 ## 🗂️ Project Structure
-
+```
 Chicken-Disease-Classification-Projects/
 │
 ├── frontend/ # Next.js app (UI)
@@ -59,9 +59,8 @@ Chicken-Disease-Classification-Projects/
 ├── Dockerfile # Container setup
 ├── dvc.yaml # DVC workflow definition
 └── README.md # You are here
+```
 
-yaml
-Copy code
 
 ---
 
@@ -71,79 +70,36 @@ Copy code
 ```bash
 git clone https://github.com/KunalBishwal/ChickTech-AI-Diagnosis.git
 cd ChickTech-AI-Diagnosis
-🐍 Step 2 — Backend Setup (Flask + ML)
-Create & activate virtual environment:
-
-bash
-Copy code
+```
+### Backend Setup (Flask + ML)
+```bash
 conda create -n cnncls python=3.8 -y
 conda activate cnncls
-Install dependencies:
-
-bash
-Copy code
 pip install -r requirements.txt
-Run Flask backend:
-
-bash
-Copy code
 python app.py
-Then visit:
-
-cpp
-Copy code
 http://127.0.0.1:5000/
-💻 Step 3 — Frontend Setup (Next.js)
+```
+
+### Frontend Setup (Next.js)
+```bash
 Navigate to frontend folder:
 
-bash
-Copy code
 cd frontend
 npm install
 npm run dev
-Then open:
 
-arduino
-Copy code
+Then open:
 http://localhost:3000
-🧰 Step 4 — DVC Commands (for ML Pipelines)
-bash
-Copy code
+```
+### DVC Commands (for ML Pipelines)
+```
 dvc init
 dvc repro
 dvc dag
-These manage your model training, tracking, and reproducibility.
+```
 
-☁️ Deployment Options
-🔹 AWS Deployment (with GitHub Actions)
-1. Create IAM User with:
-AmazonEC2FullAccess
-
-AmazonEC2ContainerRegistryFullAccess
-
-2. Setup GitHub Secrets
-ini
-Copy code
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_REGION=us-east-1
-AWS_ECR_LOGIN_URI=566373416292.dkr.ecr.us-east-1.amazonaws.com
-ECR_REPOSITORY_NAME=chicktech
-3. Build & Push Docker Image
-bash
-Copy code
-docker build -t chickenapp .
-docker tag chickenapp:latest <ECR_URI>/chicken:latest
-docker push <ECR_URI>/chicken:latest
-🔹 Azure Deployment (Alternative)
-bash
-Copy code
-docker build -t chickenapp.azurecr.io/chicken:latest .
-docker login chickenapp.azurecr.io
-docker push chickenapp.azurecr.io/chicken:latest
-Then deploy via Azure App Service → Container Settings.
-
-🧑‍💻 Developer Workflow
+### 🧑‍💻 Developer Workflow
+```bash
 Edit YAML configs → config.yaml, params.yaml
 
 Update entities → /src/entity/
@@ -155,8 +111,10 @@ Update pipelines → /src/pipeline/
 Test with → python main.py
 
 Track model changes → dvc repro
+```
 
-🔐 Security & Best Practices
+### 🔐 Security & Best Practices
+```bash
 Environment variables stored in .env.local and ignored in .gitignore
 
 Sensitive keys (Google API, Azure Registry) are not committed
@@ -164,10 +122,10 @@ Sensitive keys (Google API, Azure Registry) are not committed
 Git LFS handles large files like .h5, .keras, and .mp4
 
 DVC ensures reproducibility for ML pipelines
+```
 
-🧾 Recommended .gitignore
-gitignore
-Copy code
+### Recommended .gitignore
+```bash
 # Environment files
 .env
 .env.local
@@ -195,64 +153,4 @@ static/
 # OS / misc
 .DS_Store
 *.log
-🧪 Example API Usage
-bash
-Copy code
-POST /predict
-Content-Type: multipart/form-data
-Body: { "image": "<chicken_image.jpg>" }
-Response:
-
-json
-Copy code
-{
-  "prediction": "Coccidiosis Detected",
-  "confidence": "97.43%"
-}
-🧱 CI/CD Workflow (Simplified)
-yaml
-Copy code
-# .github/workflows/deploy.yml
-
-name: Deploy to AWS
-on:
-  push:
-    branches: [ "main" ]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Login to Amazon ECR
-        run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
-          docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_LOGIN_URI }}
-
-      - name: Build Docker image
-        run: docker build -t chicktech .
-
-      - name: Push Docker image
-        run: |
-          docker tag chicktech:latest ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
-          docker push ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
-🌐 Live Deployment (Optional)
-Once deployed, access via:
-
-cpp
-Copy code
-https://<your-aws-or-azure-url>/
-💬 Contributing
-Pull requests are welcome!
-Please open an issue first to discuss changes or feature requests.
-
-📜 License
-This project is licensed under the MIT License.
-Feel free to use and modify it with proper attribution.
-
-🧑‍🏫 Author
-Kunal Bishwal
-📍 AI Developer | Full-Stack Engineer
-💼 LinkedIn • GitHub
+```
