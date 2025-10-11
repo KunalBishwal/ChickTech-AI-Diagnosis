@@ -1,8 +1,17 @@
 # 🐔 ChickTech — AI-Powered Chicken Disease Diagnosis
 
-> An end-to-end **Machine Learning + Web Application** that detects chicken diseases from images using AI.  
-> Built with **Flask**, **Next.js**, and **Deep Learning**, and deployable via **AWS** or **Azure** CI/CD pipelines.
+## 🐣 About
 
+**ChickTech** is an AI-powered chicken disease diagnosis platform that leverages **deep learning** to identify poultry diseases such as *Coccidiosis* from uploaded images.  
+It combines a powerful **Flask backend** for AI inference and a **Next.js frontend** for an interactive, cinematic user experience.
+
+The platform provides:
+- Real-time disease detection using trained CNN models  
+- Confidence-based predictions and visualization  
+- Suggested cures and preventive measures  
+- Cloud-ready deployment pipelines (AWS / Azure)  
+
+This project demonstrates the integration of **AI, modern web frameworks, and DevOps** for solving agricultural and veterinary challenges with automation and precision.
 ---
 
 ## 🚀 Tech Stack
