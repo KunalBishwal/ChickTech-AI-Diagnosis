@@ -154,3 +154,9 @@ static/
 .DS_Store
 *.log
 ```
+## 🧑‍🏫 Author
+
+**Kunal Bishwal**  
+📍 *AI Developer | Full-Stack Engineer*  
+
+💼 [LinkedIn](https://www.linkedin.com/in/kunalbishwal) • [GitHub](https://github.com/KunalBishwal)
