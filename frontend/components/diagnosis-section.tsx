@@ -1,6 +1,5 @@
 "use client";
 
-import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,13 +11,26 @@ import {
   Loader2,
   Camera,
   Sparkles,
+  X,
+  Play,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import ScrollReveal from "@/components/reactbits/scroll-reveal";
 import ScrollFloat from "@/components/reactbits/scroll-float";
 import LiquidEther from "@/components/reactbits/liquid-ether";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
+import RollingText from "@/components/ui/rolling-text";
+
+import {
+  VideoPlayer,
+  VideoPlayerContent,
+  VideoPlayerControlBar,
+  VideoPlayerPlayButton,
+  VideoPlayerTimeRange,
+  VideoPlayerMuteButton,
+} from "@/components/ui/skiper-ui/skiper67";
 
 export default function DiagnosisSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -26,27 +38,27 @@ export default function DiagnosisSection() {
   const scanningRef = useRef<HTMLDivElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState<"healthy" | "sick" | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [scanProgress, setScanProgress] = useState(0);
   const [confidence, setConfidence] = useState<number | null>(null);
   const [animatedConfidence, setAnimatedConfidence] = useState(0);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
-  // 🎞 Scroll-triggered cinematic reveal
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     if (sectionRef.current && toolRef.current) {
       const ctx = gsap.context(() => {
-        // Timeline for entering viewport (fade + lift)
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 75%",  // triggers earlier
-            toggleActions: "play none none reverse", // fades in, reverses cleanly on scroll up
+            start: "top 75%",
+            toggleActions: "play none none reverse",
           },
         });
 
@@ -66,68 +78,19 @@ export default function DiagnosisSection() {
           },
           "-=0.8"
         );
-
-        // Light parallax movement (no fading)
-        gsap.to(toolRef.current, {
-          y: -20,
-          ease: "none",
-          scrollTrigger: {
-            trigger: toolRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 0.8, // subtle parallax, no opacity change
-          },
-        });
       });
 
       return () => ctx.revert();
     }
   }, []);
 
-  // 🧠 Scanning animation + progress
-  useEffect(() => {
-    if (isScanning && scanningRef.current) {
-      const tl = gsap.timeline({ repeat: -1 });
-      tl.fromTo(
-        scanningRef.current.querySelector(".scan-line"),
-        { y: "-100%", opacity: 0 },
-        { y: "100%", opacity: 1, duration: 2, ease: "power2.inOut" }
-      ).to(scanningRef.current.querySelector(".scan-line"), {
-        opacity: 0,
-        duration: 0.5,
-      });
-
-      const progressInterval = setInterval(() => {
-        setScanProgress((prev) => (prev >= 100 ? 100 : prev + Math.random() * 15));
-      }, 200);
-
-      return () => {
-        tl.kill();
-        clearInterval(progressInterval);
-      };
-    }
-  }, [isScanning]);
-
-  // 💡 Fade in result
-  useEffect(() => {
-    if (result && resultRef.current) {
-      gsap.fromTo(
-        resultRef.current,
-        { scale: 0.9, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.8, ease: "power2.out" }
-      );
-    }
-  }, [result]);
-
-  // 📈 Animate confidence percentage
+  // Animate confidence percentage
   useEffect(() => {
     if (confidence !== null) {
       let start = 0;
       const end = Math.round(confidence * 100);
-      const duration = 1000;
-      const increment = end / (duration / 20);
       const timer = setInterval(() => {
-        start += increment;
+        start += 2;
         if (start >= end) {
           start = end;
           clearInterval(timer);
@@ -138,7 +101,6 @@ export default function DiagnosisSection() {
     }
   }, [confidence]);
 
-  // 🔒 Protected Action
   const handleProtectedAction = (callback: () => void) => {
     const user = auth.currentUser;
     if (!user) {
@@ -149,7 +111,6 @@ export default function DiagnosisSection() {
     callback();
   };
 
-  // 📤 File Upload
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -163,12 +124,10 @@ export default function DiagnosisSection() {
     }
   };
 
-  // 🔮 Flask Prediction
   const startScanning = async (imageBase64: string) => {
     setIsScanning(true);
     setResult(null);
     setConfidence(null);
-    setScanProgress(0);
     setAnimatedConfidence(0);
 
     try {
@@ -203,9 +162,48 @@ export default function DiagnosisSection() {
     setResult(null);
     setConfidence(null);
     setIsScanning(false);
-    setScanProgress(0);
     setAnimatedConfidence(0);
   };
+
+  // ---------------- Cursor-following Play icon ----------------
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cursorRef.current) return;
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    gsap.to(cursorRef.current, {
+      x: x - 20,
+      y: y - 20,
+      duration: 0.25,
+      ease: "power2.out",
+    });
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+    if (cursorRef.current) {
+      gsap.fromTo(
+        cursorRef.current,
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.4, ease: "power3.out" }
+      );
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    if (cursorRef.current) {
+      gsap.to(cursorRef.current, {
+        scale: 0,
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.inOut",
+      });
+    }
+  };
+
+  // ----------------------------------------------------------
 
   return (
     <section
@@ -213,7 +211,6 @@ export default function DiagnosisSection() {
       ref={sectionRef}
       className="py-32 relative overflow-hidden bg-gradient-to-b from-blue-50 via-white to-purple-50"
     >
-      {/* 💧 Liquid Ether Background */}
       <LiquidEther
         colors={["#3b82f6", "#8b5cf6", "#06b6d4", "#10b981"]}
         autoSpeed={0.4}
@@ -221,7 +218,99 @@ export default function DiagnosisSection() {
       />
 
       <div className="container mx-auto px-6 relative z-10">
-        {/* Title Section */}
+        {/* 🎬 Demo Video Section */}
+        <ScrollReveal direction="up" distance={80} duration={1.1}>
+          <div className="flex flex-col items-center mb-24 space-y-6">
+            <h3 className="text-3xl md:text-4xl font-semibold text-gray-900 text-center">
+              See ChickTech AI in Action
+            </h3>
+            <p className="text-gray-600 text-center max-w-2xl">
+              Watch how our intelligent system analyzes chicken health — real demo below.
+            </p>
+
+            {/* 🪄 Interactive Video Preview */}
+            <div
+              onMouseMove={handleMouseMove}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={() => setIsVideoOpen(true)}
+              className="relative group cursor-pointer rounded-2xl overflow-hidden border border-white/40 shadow-2xl w-[260px] h-[150px] md:w-[320px] md:h-[180px] bg-gradient-to-br from-white/80 to-white/30 backdrop-blur-md hover:scale-[1.03] transition-transform duration-500"
+            >
+              <VideoPlayer style={{ width: "100%", height: "100%" }}>
+                <VideoPlayerContent
+                  src="/demo.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  slot="media"
+                  className="w-full h-full object-cover"
+                />
+              </VideoPlayer>
+
+              {/* Floating Play Cursor */}
+              <div
+                ref={cursorRef}
+                className="absolute top-0 left-0 pointer-events-none opacity-0"
+              >
+                <div className="flex items-center space-x-2 bg-white/80 text-gray-900 px-3 py-1 rounded-full shadow-md backdrop-blur-sm text-sm font-medium">
+                  <Play className="w-4 h-4" />
+                  <span>Play</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* Fullscreen Video Modal */}
+        <AnimatePresence>
+          {isVideoOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center"
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 120, damping: 15 }}
+                className="relative w-[90%] max-w-5xl aspect-video rounded-2xl overflow-hidden shadow-2xl"
+              >
+                <VideoPlayer style={{ width: "100%", height: "100%" }}>
+                  <VideoPlayerContent
+                    src="/demo.mp4"
+                    autoPlay
+                    slot="media"
+                    className="w-full object-cover"
+                  />
+                  <VideoPlayerControlBar
+                    className="absolute bottom-0 left-0 w-full flex items-center justify-center px-4 py-2
+             bg-gradient-to-t from-black/60 via-black/20 to-transparent
+             backdrop-blur-sm text-white z-20"
+                  >
+                    <VideoPlayerPlayButton className="h-5 bg-transparent text-white" />
+                    <VideoPlayerTimeRange className="mx-3 flex-1 bg-white/20 rounded-full overflow-hidden" />
+                    <VideoPlayerMuteButton className="h-5 w-5 bg-transparent text-white" />
+                  </VideoPlayerControlBar>
+
+                  <VideoPlayerTimeRange className="bg-transparent" />
+                  <VideoPlayerMuteButton className="size-4 bg-transparent" />
+
+                </VideoPlayer>
+
+                <button
+                  onClick={() => setIsVideoOpen(false)}
+                  className="absolute top-4 right-4 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full transition"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ---- Title Section ---- */}
         <ScrollReveal direction="up" distance={100} duration={1.2}>
           <div className="text-center mb-20 diagnosis-title">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
@@ -233,14 +322,14 @@ export default function DiagnosisSection() {
                 Magic
               </span>
             </h2>
+            
             <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-              Upload a photo of your chicken and let our AI reveal its health
-              status.
+              Upload a photo of your chicken and let our AI reveal its health status.
             </p>
           </div>
         </ScrollReveal>
 
-        {/* Tool Section */}
+        {/* ---- Diagnosis Tool ---- */}
         <ScrollFloat speed={0.1}>
           <div ref={toolRef} className="max-w-3xl mx-auto opacity-0">
             <div className="p-12 bg-white/80 backdrop-blur-sm border-2 border-white/50 shadow-2xl rounded-3xl">
@@ -297,7 +386,6 @@ export default function DiagnosisSection() {
                     )}
                   </div>
 
-                  {/* Scanning or Result */}
                   {isScanning ? (
                     <div className="text-center py-12">
                       <div className="inline-block mb-6 relative">
@@ -334,24 +422,27 @@ export default function DiagnosisSection() {
                             <p className="text-gray-700 mt-3 text-lg max-w-xl mx-auto">
                               Our AI suspects possible infection symptoms in this chicken image.
                             </p>
-
-                            {/* Cure & Next Step CTA */}
                             <div className="mt-6">
                               <Button
                                 size="lg"
                                 className="bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold shadow-lg hover:scale-105 transition-all duration-300 px-6 py-3"
                                 onClick={() => {
-                                  const cureSection = document.getElementById("cure-section");
+                                  const cureSection =
+                                    document.getElementById("cure-section");
                                   if (cureSection) {
                                     cureSection.scrollIntoView({
                                       behavior: "smooth",
-                                      block: "start",
                                     });
-
-                                    // Optional: add a glow pulse for visual continuity
-                                    cureSection.classList.add("ring-4", "ring-orange-300/50");
+                                    cureSection.classList.add(
+                                      "ring-4",
+                                      "ring-orange-300/50"
+                                    );
                                     setTimeout(
-                                      () => cureSection.classList.remove("ring-4", "ring-orange-300/50"),
+                                      () =>
+                                        cureSection.classList.remove(
+                                          "ring-4",
+                                          "ring-orange-300/50"
+                                        ),
                                       1500
                                     );
                                   }
@@ -382,8 +473,6 @@ export default function DiagnosisSection() {
                       </div>
                     )
                   )}
-
-                  {/* Reset Button */}
                   <Button
                     variant="outline"
                     onClick={resetTool}
@@ -392,7 +481,6 @@ export default function DiagnosisSection() {
                   >
                     Analyze Another Image
                   </Button>
-
                 </div>
               )}
             </div>

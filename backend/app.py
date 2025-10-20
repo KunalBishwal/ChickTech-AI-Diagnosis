@@ -1,0 +1,47 @@
+################################### REACT APP ###########################################
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
+from flask import Flask, request, jsonify
+import os
+from flask_cors import CORS, cross_origin
+from cnnClassifier.utils.common import decodeImage
+from cnnClassifier.pipeline.predict import PredictionPipeline
+
+os.putenv('LANG', 'en_US.UTF-8')
+os.putenv('LC_ALL', 'en_US.UTF-8')
+
+app = Flask(__name__)
+CORS(app)
+
+class ClientApp:
+    def __init__(self):
+        self.filename = "inputImage.jpg"
+        self.classifier = PredictionPipeline(self.filename)
+
+# Instantiate the ClientApp object once
+clApp = ClientApp()
+
+@app.route("/train", methods=['GET','POST'])
+@cross_origin()
+def trainRoute():
+    """
+    This endpoint triggers the DVC pipeline to retrain the model.
+    """
+    os.system("dvc repro --force")
+    return jsonify({"message": "Training done successfully!"})
+
+
+@app.route("/predict", methods=['POST'])
+@cross_origin()
+def predictRoute():
+    """
+    This endpoint receives an image and returns a prediction.
+    """
+    image = request.json['image']
+    decodeImage(image, clApp.filename)
+    result = clApp.classifier.predict()
+    return jsonify(result)
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=8080)

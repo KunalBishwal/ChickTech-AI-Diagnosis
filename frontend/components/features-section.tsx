@@ -68,17 +68,21 @@ export default function FeaturesSection() {
     }
   }, []);
 
+  // 🎯 Shared tilt/transform handler
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
+
     gsap.to(card, {
-      rotationY: x / 50,
-      rotationX: -y / 50,
-      transformPerspective: 800,
+      rotationY: x / 60, // reduced tilt
+      rotationX: -y / 60,
+      scale: 1.03,
+      transformPerspective: 900,
+      transformOrigin: "center",
       ease: "power2.out",
-      duration: 0.5,
+      duration: 0.4,
     });
   };
 
@@ -87,6 +91,7 @@ export default function FeaturesSection() {
     gsap.to(card, {
       rotationY: 0,
       rotationX: 0,
+      scale: 1,
       ease: "power3.out",
       duration: 0.6,
     });
@@ -172,10 +177,11 @@ export default function FeaturesSection() {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             className={`feature-card group relative p-8 rounded-3xl backdrop-blur-xl border border-white/40 shadow-xl transition-all duration-500 bg-gradient-to-br ${feature.gradient}
-              hover:-translate-y-2 hover:scale-[1.03] hover:shadow-2xl hover:shadow-purple-200/40`}
+              hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-200/40 transform-gpu will-change-transform`}
+            style={{ transformStyle: "preserve-3d" }}
           >
             <div className="flex flex-col items-start space-y-4">
-              <div className="p-3 rounded-2xl bg-white/50 shadow-inner backdrop-blur-md transform transition-transform duration-300 group-hover:rotate-[5deg]">
+              <div className="p-3 rounded-2xl bg-white/50 shadow-inner backdrop-blur-md transform transition-transform duration-300 group-hover:rotate-[4deg]">
                 {feature.icon}
               </div>
               <h3 className="text-2xl font-bold text-gray-900">
@@ -190,8 +196,21 @@ export default function FeaturesSection() {
       </div>
 
       {/* 🚀 Project Development CTA */}
-      <div ref={ctaRef} className="text-center mt-32 px-6 relative z-10">
-        <div className="cta-card bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 rounded-3xl p-14 max-w-4xl mx-auto text-white shadow-2xl backdrop-blur-lg border border-white/10">
+      <div
+        ref={ctaRef}
+        className="text-center mt-32 px-6 relative z-10"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div
+          className="cta-card bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 rounded-3xl p-14 max-w-4xl mx-auto text-white shadow-2xl backdrop-blur-lg border border-transparent transition-all duration-500 hover:scale-[1.02] hover:shadow-purple-500/40 hover:border-gradient"
+          style={{
+            transformStyle: "preserve-3d",
+            willChange: "transform",
+            boxShadow:
+              "0 0 25px rgba(139, 92, 246, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.1)",
+          }}
+        >
           <div className="relative z-10">
             <h3 className="text-4xl md:text-5xl font-bold mb-6">
               🚀 Project in Development

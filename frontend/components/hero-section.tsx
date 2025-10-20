@@ -222,7 +222,6 @@ export default function HeroSection() {
           loop
           playsInline
           className="w-full h-full object-cover brightness-[0.9]"
-          poster="/peaceful-farm-field-with-chickens.jpg"
         >
           <source src="/chicken-farm.mp4" type="video/mp4" />
         </video>
