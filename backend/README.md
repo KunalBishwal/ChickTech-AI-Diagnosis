@@ -1,158 +1,171 @@
-# Chicken-Disease-Classification--Project
+# 🐔 ChickTech — AI-Powered Chicken Disease Diagnosis
 
+## 🐣 About
 
-## Workflows
+**ChickTech** is an AI-powered chicken disease diagnosis platform that leverages **deep learning** to identify poultry diseases such as *Coccidiosis* from uploaded images.  
+It combines a powerful **Flask backend** for AI inference and a **Next.js frontend** for an interactive, cinematic user experience.
 
-1. Update config.yaml
-2. Update secrets.yaml [Optional]
-3. Update params.yaml
-4. Update the entity
-5. Update the configuration manager in src config
-6. Update the components
-7. Update the pipeline 
-8. Update the main.py
-9. Update the dvc.yaml
+The platform provides:
+- Real-time disease detection using trained CNN models  
+- Confidence-based predictions and visualization  
+- Suggested cures and preventive measures  
+- Cloud-ready deployment pipelines (AWS / Azure)  
 
+This project demonstrates the integration of **AI, modern web frameworks, and DevOps** for solving agricultural and veterinary challenges with automation and precision.
+---
 
-# How to run?
-### STEPS:
+## 🚀 Tech Stack
 
-Clone the repository
+| Layer | Technologies Used |
+|-------|--------------------|
+| **Frontend** | Next.js 14, TypeScript, Tailwind CSS, GSAP Animations |
+| **Backend / API** | Flask (Python), REST API |
+| **Machine Learning** | TensorFlow / Keras, OpenCV, DVC Pipelines |
+| **Database / Storage** | AWS S3, Azure Container Registry |
+| **CI/CD** | GitHub Actions, Docker, AWS EC2 / Azure Web App |
+| **Version Control** | Git, Git LFS (for large models) |
 
-```bash
-https://github.com/entbappy/Chicken-Disease-Classification--Project
+---
+
+## 🧠 Core Features
+
+✅ AI-based chicken disease classification from image uploads  
+✅ Confidence-level visualization with smooth animations  
+✅ Cure & prevention recommendation system  
+✅ Multi-lingual interface (English + Hindi)  
+✅ Secure `.env` and `.gitignore` handling  
+✅ Integrated with Git LFS for large ML models  
+✅ AWS & Azure ready deployment pipelines  
+
+---
+
+## 🗂️ Project Structure
 ```
-### STEP 01- Create a conda environment after opening the repository
+Chicken-Disease-Classification-Projects/
+│
+├── frontend/ # Next.js app (UI)
+│ ├── app/
+│ ├── components/
+│ ├── public/
+│ ├── package.json
+│
+├── src/ # Core ML & pipeline source
+│ ├── components/
+│ ├── config/
+│ ├── entity/
+│ ├── pipeline/
+│ └── utils/
+│
+├── artifacts/ # Model artifacts (.h5, .keras)
+├── static/ # Static assets
+├── templates/ # Flask templates
+├── config/ # YAML configuration files
+├── logs/ # Training & runtime logs
+│
+├── app.py # Flask app entry point
+├── main.py # ML pipeline entry
+├── requirements.txt # Python dependencies
+├── Dockerfile # Container setup
+├── dvc.yaml # DVC workflow definition
+└── README.md # You are here
+```
 
+
+---
+
+## ⚙️ Setup Instructions
+
+### 🧩 Step 1 — Clone the Repository
+```bash
+git clone https://github.com/KunalBishwal/ChickTech-AI-Diagnosis.git
+cd ChickTech-AI-Diagnosis
+```
+### Backend Setup (Flask + ML)
 ```bash
 conda create -n cnncls python=3.8 -y
-```
-
-```bash
 conda activate cnncls
-```
-
-
-### STEP 02- install the requirements
-```bash
 pip install -r requirements.txt
-```
-
-
-```bash
-# Finally run the following command
 python app.py
+http://127.0.0.1:5000/
 ```
 
-Now,
+### Frontend Setup (Next.js)
 ```bash
-open up you local host and port
+Navigate to frontend folder:
+
+cd frontend
+npm install
+npm run dev
+
+Then open:
+http://localhost:3000
+```
+### DVC Commands (for ML Pipelines)
+```
+dvc init
+dvc repro
+dvc dag
 ```
 
+### 🧑‍💻 Developer Workflow
+```bash
+Edit YAML configs → config.yaml, params.yaml
 
-### DVC cmd
+Update entities → /src/entity/
 
-1. dvc init
-2. dvc repro
-3. dvc dag
+Modify components → /src/components/
 
+Update pipelines → /src/pipeline/
 
+Test with → python main.py
 
-# AWS-CICD-Deployment-with-Github-Actions
+Track model changes → dvc repro
+```
 
-## 1. Login to AWS console.
+### 🔐 Security & Best Practices
+```bash
+Environment variables stored in .env.local and ignored in .gitignore
 
-## 2. Create IAM user for deployment
+Sensitive keys (Google API, Azure Registry) are not committed
 
-	#with specific access
+Git LFS handles large files like .h5, .keras, and .mp4
 
-	1. EC2 access : It is virtual machine
+DVC ensures reproducibility for ML pipelines
+```
 
-	2. ECR: Elastic Container registry to save your docker image in aws
+### Recommended .gitignore
+```bash
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
 
+# Python
+__pycache__/
+*.pyc
+venv/
+logs/
 
-	#Description: About the deployment
+# Node / Next.js
+node_modules/
+.next/
 
-	1. Build docker image of the source code
+# ML artifacts
+artifacts/
+*.h5
+*.keras
+*.mp4
+research/
+static/
 
-	2. Push your docker image to ECR
+# OS / misc
+.DS_Store
+*.log
+```
+## 🧑‍🏫 Author
 
-	3. Launch Your EC2 
+**Kunal Bishwal**  
+📍 *AI Developer | Full-Stack Engineer*  
 
-	4. Pull Your image from ECR in EC2
-
-	5. Lauch your docker image in EC2
-
-	#Policy:
-
-	1. AmazonEC2ContainerRegistryFullAccess
-
-	2. AmazonEC2FullAccess
-
-	
-## 3. Create ECR repo to store/save docker image
-    - Save the URI: 566373416292.dkr.ecr.us-east-1.amazonaws.com/chicken
-
-	
-## 4. Create EC2 machine (Ubuntu) 
-
-## 5. Open EC2 and Install docker in EC2 Machine:
-	
-	
-	#optinal
-
-	sudo apt-get update -y
-
-	sudo apt-get upgrade
-	
-	#required
-
-	curl -fsSL https://get.docker.com -o get-docker.sh
-
-	sudo sh get-docker.sh
-
-	sudo usermod -aG docker ubuntu
-
-	newgrp docker
-	
-# 6. Configure EC2 as self-hosted runner:
-    setting>actions>runner>new self hosted runner> choose os> then run command one by one
-
-
-# 7. Setup github secrets:
-
-    AWS_ACCESS_KEY_ID=
-
-    AWS_SECRET_ACCESS_KEY=
-
-    AWS_REGION = us-east-1
-
-    AWS_ECR_LOGIN_URI = demo>>  566373416292.dkr.ecr.ap-south-1.amazonaws.com
-
-    ECR_REPOSITORY_NAME = simple-app
-
-
-
-
-# AZURE-CICD-Deployment-with-Github-Actions
-
-## Save pass:
-
-s3cEZKH5yytiVnJ3h+eI3qhhzf9q1vNwEi6+q+WGdd+ACRCZ7JD6
-
-
-## Run from terminal:
-
-docker build -t chickenapp.azurecr.io/chicken:latest .
-
-docker login chickenapp.azurecr.io
-
-docker push chickenapp.azurecr.io/chicken:latest
-
-
-## Deployment Steps:
-
-1. Build the Docker image of the Source Code
-2. Push the Docker image to Container Registry
-3. Launch the Web App Server in Azure 
-4. Pull the Docker image from the container registry to Web App server and run 
+💼 [LinkedIn](https://www.linkedin.com/in/kunalbishwal) • [GitHub](https://github.com/KunalBishwal)
