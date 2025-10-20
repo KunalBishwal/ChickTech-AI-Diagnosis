@@ -231,7 +231,7 @@ export default function HeroSection() {
       {/* Floating Text */}
       <ScrollFloat speed={0.3} className="absolute inset-0 z-5 pointer-events-none">
         <div ref={floatingTextRef} className="absolute inset-0 text-white/50 font-light">
-    
+
         </div>
       </ScrollFloat>
 
@@ -270,22 +270,31 @@ export default function HeroSection() {
         </p>
 
         {/* CTA Buttons */}
-        <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div ref={ctaRef} className="flex justify-center items-center mt-8">
           <Button
             size="lg"
-            className="pulse-btn bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-8 py-4 text-lg font-semibold shadow-xl hover:scale-105 transition-all duration-300"
-            onClick={() => document.getElementById("diagnosis")?.scrollIntoView({ behavior: "smooth" })}
+            className="
+      pulse-btn relative overflow-hidden
+      bg-gradient-to-r from-yellow-500 to-orange-500
+      hover:from-yellow-400 hover:to-orange-400
+      text-white px-10 py-5 text-lg font-semibold shadow-xl
+      transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
+      hover:scale-110 hover:shadow-[0_0_25px_rgba(255,200,0,0.5)]
+    "
+            onClick={() => document.getElementById('diagnosis')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            Try Diagnosis Tool
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            className="px-8 py-4 text-lg group bg-white/10 border-white/40 text-white hover:bg-white/20 shadow-lg"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-            Watch Demo
+            <span className="relative z-10">Try Diagnosis Tool</span>
+
+            {/* ✨ Animated gradient sheen */}
+            <span
+              className="
+        absolute inset-0
+        bg-gradient-to-r from-transparent via-white/40 to-transparent
+        opacity-0 hover:opacity-100
+        translate-x-[-100%] hover:translate-x-[100%]
+        transition-all duration-700 ease-out
+      "
+            />
           </Button>
         </div>
       </div>
