@@ -1,29 +1,17 @@
-import setuptools
+from setuptools import setup, find_packages
 
-with open("README.md", "r", encoding="utf-8") as f:
-    long_description = f.read()
-
-
-__version__ = "0.0.0"
-
-REPO_NAME = "Chicken-Disease-Classification--Project"
-AUTHOR_USER_NAME = "entbappy"
-SRC_REPO = "cnnClassifier"
-AUTHOR_EMAIL = "entbappy73@gmail.com"
-
-
-setuptools.setup(
-    name=SRC_REPO,
-    version=__version__,
-    author=AUTHOR_USER_NAME,
-    author_email=AUTHOR_EMAIL,
-    description="A small python package for CNN app",
-    long_description=long_description,
-    long_description_content="text/markdown",
-    url=f"https://github.com/{AUTHOR_USER_NAME}/{REPO_NAME}",
+setup(
+    name="cnnClassifier",
+    version="0.0.1",
+    author="KunalBishwal",
+    author_email="kunalbishwal2004@gmail.com",
+    description="A CNN-based chicken disease diagnosis backend for ChickTech AI.",
+    long_description="Flask-based backend service for ChickTech AI — enabling chicken disease prediction using deep learning models.",
+    long_description_content_type="text/markdown",
+    url="https://github.com/KunalBishwal/ChickTech-AI-Diagnosis",
     project_urls={
-        "Bug Tracker": f"https://github.com/{AUTHOR_USER_NAME}/{REPO_NAME}/issues",
+        "Bug Tracker": "https://github.com/KunalBishwal/ChickTech-AI-Diagnosis/issues",
     },
     package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src")
+    packages=find_packages(where="src"),
 )
