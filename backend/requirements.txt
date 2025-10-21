@@ -5,6 +5,7 @@ notebook
 numpy
 matplotlib
 seaborn
+gunicorn 
 python-box==6.0.2
 pyYAML
 tqdm
@@ -14,4 +15,4 @@ types-PyYAML
 scipy
 Flask
 Flask-Cors
--e .
+# -e .
