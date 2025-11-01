@@ -8,8 +8,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 from cnnClassifier.utils.common import decodeImage
 from cnnClassifier.pipeline.predict import PredictionPipeline
 
+# app = Flask(__name__)
+# CORS(app)
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://chicktech-ai.vercel.app"]}})
 os.putenv("LANG", "en_US.UTF-8")
 os.putenv("LC_ALL", "en_US.UTF-8")
 
