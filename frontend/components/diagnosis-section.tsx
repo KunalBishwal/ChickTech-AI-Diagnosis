@@ -142,6 +142,11 @@ export default function DiagnosisSection() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: base64Data }),
       });
+      // const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/predict`, {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ image: base64Data }),
+      // });
 
       const data = await response.json();
 
@@ -327,7 +332,7 @@ export default function DiagnosisSection() {
                 Magic
               </span>
             </h2>
-            
+
             <p className="text-xl text-gray-600 max-w-4xl mx-auto">
               Upload a photo of your chicken and let our AI reveal its health status.
             </p>
@@ -467,8 +472,8 @@ export default function DiagnosisSection() {
                             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                               <div
                                 className={`h-3 rounded-full transition-all duration-700 ease-out ${result === "healthy"
-                                    ? "bg-gradient-to-r from-green-400 to-emerald-500"
-                                    : "bg-gradient-to-r from-red-400 to-orange-500"
+                                  ? "bg-gradient-to-r from-green-400 to-emerald-500"
+                                  : "bg-gradient-to-r from-red-400 to-orange-500"
                                   }`}
                                 style={{ width: `${animatedConfidence}%` }}
                               ></div>
