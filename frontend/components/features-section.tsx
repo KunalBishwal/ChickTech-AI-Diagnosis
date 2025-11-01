@@ -226,7 +226,7 @@ export default function FeaturesSection() {
                 className="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-8 py-4 text-lg font-semibold shadow-xl hover:scale-105 transition-all"
                 onClick={() =>
                   window.open(
-                    "https://github.com/KunalBishwal/Chicken-Disease-Classification-Projects",
+                    "https://github.com/KunalBishwal/ChickTech-AI-Diagnosis",
                     "_blank"
                   )
                 }

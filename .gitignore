@@ -2,7 +2,6 @@ commands.txt
 read.txt
 # Secrets
 .env
-*.yaml
 *.key
 *.pem
 *.p12
