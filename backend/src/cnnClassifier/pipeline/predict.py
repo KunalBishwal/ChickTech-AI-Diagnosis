@@ -11,7 +11,7 @@ class PredictionPipeline:
         self.filename = filename
         if PredictionPipeline._model is None:
             model_path = os.path.join("artifacts", "training", "model.h5")
-            PredictionPipeline._model = tf.keras.models.load_model(model_path)
+            PredictionPipeline._model = tf.keras.models.load_model(model_path, compile=False)
             print(f"✅ Model loaded from: {model_path}")
 
         # define class order same as training data folder names
