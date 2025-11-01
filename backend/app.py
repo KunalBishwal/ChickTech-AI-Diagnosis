@@ -76,7 +76,7 @@ app = Flask(__name__)
 # Allow frontend origins (localhost + Vercel)
 CORS(app, resources={r"/*": {"origins": [
     "http://localhost:3000",
-    "https://chicktech-ai.vercel.app"
+     "https://chick-tech-ai-diagnosis.vercel.app"
 ]}})
 
 # Environment variables
