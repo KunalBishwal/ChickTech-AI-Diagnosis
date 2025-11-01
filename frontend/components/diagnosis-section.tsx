@@ -132,7 +132,12 @@ export default function DiagnosisSection() {
 
     try {
       const base64Data = imageBase64.split(",")[1];
-      const response = await fetch("http://127.0.0.1:8080/predict", {
+        // const response = await fetch("http://127.0.0.1:8080/predict", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ image: base64Data }),
+      // });
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: base64Data }),
