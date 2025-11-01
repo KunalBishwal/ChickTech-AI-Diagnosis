@@ -59,7 +59,6 @@
 
 
 
-
 import sys
 import os
 from flask import Flask, request, jsonify
@@ -80,25 +79,28 @@ CORS(app, resources={r"/*": {"origins": [
     "https://chicktech-ai.vercel.app"
 ]}})
 
-# Environment variables (safe defaults)
+# Environment variables
 os.putenv("LANG", "en_US.UTF-8")
 os.putenv("LC_ALL", "en_US.UTF-8")
+
 
 # ---------------------- Model Wrapper ----------------------
 class ClientApp:
     def __init__(self):
         self.filename = "inputImage.jpg"
-        self.classifier = None  # Lazy-load model only when needed
+        self.classifier = None  # Lazy load only once
 
     def load_model(self):
-        """Load model once and reuse it for future predictions."""
+        """Load model once and reuse for later predictions."""
         if self.classifier is None:
             print("🔄 Loading TensorFlow model into memory...")
             self.classifier = PredictionPipeline(self.filename)
             print("✅ Model loaded successfully.")
 
+
 # Create global instance
 clApp = ClientApp()
+
 
 # ---------------------- Routes ----------------------
 
@@ -115,14 +117,12 @@ def predictRoute():
         if not image:
             return jsonify({"error": "No image provided"}), 400
 
-        # Load model only once (on first request)
-        clApp.load_model()
+        clApp.load_model()  # Load once, reuse
 
-        # Decode and predict
         decodeImage(image, clApp.filename)
         result = clApp.classifier.predict()
-
         return jsonify(result)
+
     except Exception as e:
         print("❌ Prediction error:", e)
         return jsonify({"error": str(e)}), 500
@@ -133,18 +133,21 @@ def health():
     return jsonify({"status": "ok"}), 200
 
 
-# ---------------------- Preload model (optional warmup) ----------------------
-@app.before_first_request
-def warmup_model():
-    try:
-        clApp.load_model()
-        print("🔥 Model preloaded and ready.")
-    except Exception as e:
-        print(f"⚠️ Model preload failed: {e}")
+# ---------------------- Model Warmup (Flask 3.x compatible) ----------------------
+@app.before_request
+def warmup_model_once():
+    """Ensures model loads only before the first real request."""
+    if clApp.classifier is None:
+        try:
+            clApp.load_model()
+            print("🔥 Model preloaded and ready.")
+        except Exception as e:
+            print(f"⚠️ Model preload failed: {e}")
 
 
 # ---------------------- Run Server ----------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
+
 
