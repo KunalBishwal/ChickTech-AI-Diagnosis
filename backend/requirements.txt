@@ -1,18 +1,34 @@
-tensorflow
-pandas 
+# tensorflow
+# pandas 
+# dvc
+# notebook
+# numpy
+# matplotlib
+# seaborn
+# gunicorn 
+# python-box==6.0.2
+# pyYAML
+# tqdm
+# ensure==1.0.2
+# joblib
+# types-PyYAML
+# scipy
+# Flask
+# Flask-Cors
+# # -e .
+
+tensorflow==2.12.0
+pandas
 dvc
-notebook
 numpy
 matplotlib
 seaborn
-gunicorn 
+gunicorn
 python-box==6.0.2
-pyYAML
+PyYAML
 tqdm
-ensure==1.0.2
 joblib
-types-PyYAML
-scipy
 Flask
 Flask-Cors
+scipy
 # -e .
