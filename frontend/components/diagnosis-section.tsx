@@ -248,7 +248,7 @@ export default function DiagnosisSection() {
             >
               <VideoPlayer style={{ width: "100%", height: "100%" }}>
                 <VideoPlayerContent
-                  src="/demo.mp4"
+                  src="https://drive.google.com/file/d/1IKE59orfBnIVvB3lBTzLOPDp5w_xczP-/view?usp=drive_link"
                   autoPlay
                   muted
                   loop
