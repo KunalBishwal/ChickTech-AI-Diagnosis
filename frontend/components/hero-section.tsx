@@ -223,7 +223,7 @@ export default function HeroSection() {
           playsInline
           className="w-full h-full object-cover brightness-[0.9]"
         >
-          <source src="/chicken-farm.mp4" type="video/mp4" />
+          <source src="https://drive.google.com/file/d/1YhLukcUm9nhticq4kaOSqLN6TbFFgMjw/view?usp=drive_link" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/70" />
       </div>
