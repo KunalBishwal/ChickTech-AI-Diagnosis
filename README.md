@@ -32,7 +32,6 @@ This project demonstrates the integration of **AI, modern web frameworks, and De
 ✅ AI-based chicken disease classification from image uploads  
 ✅ Confidence-level visualization with smooth animations  
 ✅ Cure & prevention recommendation system  
-✅ Multi-lingual interface (English + Hindi)  
 ✅ Secure `.env` and `.gitignore` handling  
 ✅ Integrated with Git LFS for large ML models  
 ✅ AWS & Azure ready deployment pipelines  
