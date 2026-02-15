@@ -45,7 +45,7 @@ export default function CureSection() {
         <section
             id="cure-section"
             ref={sectionRef}
-            className="relative py-32 overflow-hidden bg-gradient-to-b from-red-50 via-white to-orange-50"
+            className="relative py-32 overflow-hidden bg-linear-to-b from-red-50 via-white to-orange-50"
         >
             <LiquidEther
                 colors={["#f87171", "#fbbf24", "#fb923c", "#facc15"]}
@@ -57,13 +57,13 @@ export default function CureSection() {
                 ref={contentRef}
                 className="container mx-auto px-6 text-center relative z-10"
             >
-                <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-orange-400 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
+                <div className="w-20 h-20 bg-linear-to-br from-red-500 to-orange-400 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
                     <HeartPulse className="w-10 h-10 text-white" />
                 </div>
 
                 <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900">
                     Recovery &{" "}
-                    <span className="bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+                    <span className="bg-linear-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
                         Prevention
                     </span>
                 </h2>
@@ -116,7 +116,7 @@ export default function CureSection() {
                         <button
                             key={id}
                             onClick={() => scrollToSection(id)}
-                            className={`bg-gradient-to-r from-red-500 to-orange-500 text-white px-10 py-5 text-lg font-semibold shadow-xl hover:scale-105 transition-all rounded-md font-medium transition-all duration-300 hover:scale-105 ${isScrolled
+                            className={`bg-linear-to-r from-red-500 to-orange-500 text-white px-10 py-5 text-lg font-semibold shadow-xl hover:scale-105 transition-all rounded-md font-medium transition-all duration-300 hover:scale-105 ${isScrolled
                                 ? "text-gray-600 hover:text-gray-900"
                                 : "text-white/80 hover:text-white"
                                 }`}

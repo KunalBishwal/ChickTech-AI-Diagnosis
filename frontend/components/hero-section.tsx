@@ -276,20 +276,20 @@ export default function HeroSection() {
       {/* Main Content */}
       <div className="relative z-10 container mx-auto px-6 text-center text-white">
         <div ref={mascotRef} className="mb-8">
-          <div className="w-40 h-40 mx-auto bg-gradient-to-br from-yellow-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30 relative">
+          <div className="w-40 h-40 mx-auto bg-linear-to-br from-yellow-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30 relative">
             <span className="text-7xl filter drop-shadow-lg">🐔</span>
           </div>
         </div>
 
         <h1 ref={titleRef} className="text-6xl md:text-8xl font-bold mb-6">
-          <span className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
             {"CHICK".split("").map((char, i) => (
               <span key={i} className="char inline-block">
                 {char}
               </span>
             ))}
           </span>
-          <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent ml-2">
+          <span className="bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent ml-2">
             {"TECH".split("").map((char, i) => (
               <span key={i} className="char inline-block">
                 {char}
