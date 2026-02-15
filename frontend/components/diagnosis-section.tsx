@@ -48,6 +48,7 @@ export default function DiagnosisSection() {
   const [animatedConfidence, setAnimatedConfidence] = useState(0);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -142,11 +143,6 @@ export default function DiagnosisSection() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: base64Data }),
       });
-      // const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/predict`, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ image: base64Data }),
-      // });
 
       const data = await response.json();
 
@@ -219,7 +215,7 @@ export default function DiagnosisSection() {
     <section
       id="diagnosis"
       ref={sectionRef}
-      className="py-32 relative overflow-hidden bg-gradient-to-b from-blue-50 via-white to-purple-50"
+      className="py-32 relative overflow-hidden bg-linear-to-b from-blue-50 via-white to-purple-50"
     >
       <LiquidEther
         colors={["#3b82f6", "#8b5cf6", "#06b6d4", "#10b981"]}
@@ -228,48 +224,84 @@ export default function DiagnosisSection() {
       />
 
       <div className="container mx-auto px-6 relative z-10">
+
         {/* 🎬 Demo Video Section */}
-        <ScrollReveal direction="up" distance={80} duration={1.1}>
-          <div className="flex flex-col items-center mb-24 space-y-6">
-            <h3 className="text-3xl md:text-4xl font-semibold text-gray-900 text-center">
-              See ChickTech AI in Action
-            </h3>
-            <p className="text-gray-600 text-center max-w-2xl">
-              Watch how our intelligent system analyzes chicken health — real demo below.
-            </p>
+<ScrollReveal direction="up" distance={80} duration={1.1}>
+  <div className="flex flex-col items-center mb-24 space-y-6">
 
-            {/* 🪄 Interactive Video Preview */}
-            <div
-              onMouseMove={handleMouseMove}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              onClick={() => setIsVideoOpen(true)}
-              className="relative group cursor-pointer rounded-2xl overflow-hidden border border-white/40 shadow-2xl w-65 h-37.5 md:w-[320px] md:h-[180px] bg-gradient-to-br from-white/80 to-white/30 backdrop-blur-md hover:scale-[1.03] transition-transform duration-500"
+    <h3 className="text-3xl md:text-4xl font-semibold text-gray-900 text-center">
+      See ChickTech AI in Action
+    </h3>
+
+    <p className="text-gray-600 text-center max-w-2xl">
+      Watch how our intelligent system analyzes chicken health — real demo below.
+    </p>
+
+    {/* 🪄 Interactive Video Preview */}
+    <div
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={() => {
+        if (!videoError) setIsVideoOpen(true);
+      }}
+      className="relative group cursor-pointer rounded-2xl overflow-hidden border border-white/40 shadow-2xl w-[260px] h-[150px] md:w-[320px] md:h-[180px] bg-gradient-to-br from-white/80 to-white/30 backdrop-blur-md hover:scale-[1.03] transition-transform duration-500"
+    >
+
+      {!videoError ? (
+        <VideoPlayer style={{ width: "100%", height: "100%" }}>
+          <VideoPlayerContent
+            src="/demo.mp4"
+            autoPlay
+            muted
+            loop
+            slot="media"
+            className="w-full h-full object-cover"
+            onError={() => setVideoError(true)}
+          />
+        </VideoPlayer>
+      ) : (
+        <div className="relative w-full h-full">
+          <img
+            src="/cock-farm-village-chicken.jpg"
+            alt="Demo fallback"
+            className="w-full h-full object-cover"
+          />
+
+          {/* Hover Overlay Button */}
+          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(
+                  "https://drive.google.com/file/d/1IKE59orfBnIVvB3lBTzLOPDp5w_xczP-/view?usp=sharing",
+                  "_blank"
+                );
+              }}
+              className="bg-white text-black font-semibold px-4 py-2 shadow-lg hover:scale-105 transition"
             >
-              <VideoPlayer style={{ width: "100%", height: "100%" }}>
-                <VideoPlayerContent
-                  src="/demo.mp4"
-                  autoPlay
-                  muted
-                  loop
-                  slot="media"
-                  className="w-full h-full object-cover"
-                />
-              </VideoPlayer>
-
-              {/* Floating Play Cursor */}
-              <div
-                ref={cursorRef}
-                className="absolute top-0 left-0 pointer-events-none opacity-0"
-              >
-                <div className="flex items-center space-x-2 bg-white/80 text-gray-900 px-3 py-1 rounded-full shadow-md backdrop-blur-sm text-sm font-medium">
-                  <Play className="w-4 h-4" />
-                  <span>Play</span>
-                </div>
-              </div>
-            </div>
+              🔗 Link to Demo Video
+            </Button>
           </div>
-        </ScrollReveal>
+        </div>
+      )}
+
+      {/* Floating Play Cursor */}
+      {!videoError && (
+        <div
+          ref={cursorRef}
+          className="absolute top-0 left-0 pointer-events-none opacity-0"
+        >
+          <div className="flex items-center space-x-2 bg-white/80 text-gray-900 px-3 py-1 rounded-full shadow-md backdrop-blur-sm text-sm font-medium">
+            <Play className="w-4 h-4" />
+            <span>Play</span>
+          </div>
+        </div>
+      )}
+
+    </div>
+  </div>
+</ScrollReveal>
 
         {/* Fullscreen Video Modal */}
         <AnimatePresence>
