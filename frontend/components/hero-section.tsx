@@ -1,40 +1,47 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { Button } from "@/components/ui/button"
-import { Play, ArrowDown, X } from "lucide-react"
-import ScrollFloat from "@/components/reactbits/scroll-float"
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Button } from "@/components/ui/button";
+import { Play, ArrowDown, X } from "lucide-react";
+import ScrollFloat from "@/components/reactbits/scroll-float";
 
 export default function HeroSection() {
-  const heroRef = useRef<HTMLElement>(null)
-  const mascotRef = useRef<HTMLDivElement>(null)
-  const titleRef = useRef<HTMLHeadingElement>(null)
-  const subtitleRef = useRef<HTMLParagraphElement>(null)
-  const ctaRef = useRef<HTMLDivElement>(null)
-  const scrollIndicatorRef = useRef<HTMLDivElement>(null)
-  const floatingTextRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const heroRef = useRef<HTMLElement>(null);
+  const mascotRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const floatingTextRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger)
+    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.3 })
+      const tl = gsap.timeline({ delay: 0.3 });
 
       // Floating ambient text fade-in
       if (floatingTextRef.current) {
         tl.fromTo(
           floatingTextRef.current.children,
           { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 1.8, stagger: 0.25, ease: "power2.out" }
-        )
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.8,
+            stagger: 0.25,
+            ease: "power2.out",
+          },
+        );
         gsap.to(floatingTextRef.current.children, {
           y: "random(-15, 15)",
           duration: "random(3, 5)",
@@ -42,7 +49,7 @@ export default function HeroSection() {
           yoyo: true,
           repeat: -1,
           stagger: 0.5,
-        })
+        });
       }
 
       // Mascot entry animation
@@ -50,20 +57,27 @@ export default function HeroSection() {
         tl.fromTo(
           mascotRef.current,
           { scale: 0, rotation: -180, opacity: 0, y: -100 },
-          { scale: 1, rotation: 0, opacity: 1, y: 0, duration: 1.4, ease: "elastic.out(1, 0.5)" }
-        )
+          {
+            scale: 1,
+            rotation: 0,
+            opacity: 1,
+            y: 0,
+            duration: 1.4,
+            ease: "elastic.out(1, 0.5)",
+          },
+        );
         gsap.to(mascotRef.current, {
           y: -10,
           duration: 4,
           ease: "sine.inOut",
           yoyo: true,
           repeat: -1,
-        })
+        });
       }
 
       // Title + subtitle animations
       if (titleRef.current) {
-        const chars = titleRef.current.querySelectorAll(".char")
+        const chars = titleRef.current.querySelectorAll(".char");
         tl.fromTo(
           chars,
           { opacity: 0, y: 80, rotationX: 90, scale: 0.5 },
@@ -76,8 +90,8 @@ export default function HeroSection() {
             stagger: 0.05,
             ease: "back.out(1.7)",
           },
-          "-=0.8"
-        )
+          "-=0.8",
+        );
       }
 
       if (subtitleRef.current) {
@@ -85,8 +99,8 @@ export default function HeroSection() {
           subtitleRef.current,
           { opacity: 0, y: 40 },
           { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
-          "-=0.3"
-        )
+          "-=0.3",
+        );
       }
 
       // CTA button fade-in
@@ -94,9 +108,15 @@ export default function HeroSection() {
         tl.fromTo(
           ctaRef.current.children,
           { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, duration: 0.6, stagger: 0.2, ease: "back.out(1.7)" },
-          "-=0.2"
-        )
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.2,
+            ease: "back.out(1.7)",
+          },
+          "-=0.2",
+        );
       }
 
       // Scroll Indicator animation
@@ -105,8 +125,8 @@ export default function HeroSection() {
           scrollIndicatorRef.current,
           { opacity: 0, y: 20 },
           { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
-          "-=0.1"
-        )
+          "-=0.1",
+        );
       }
 
       // Continuous parallax for depth effect
@@ -114,7 +134,7 @@ export default function HeroSection() {
         { target: heroRef, yPercent: -10, scrub: 1 },
         { target: titleRef, yPercent: -5, scrub: 1.2 },
         { target: subtitleRef, yPercent: -5, scrub: 1 },
-      ]
+      ];
       elements.forEach(({ target, yPercent, scrub }) => {
         if (target?.current) {
           gsap.to(target.current, {
@@ -126,9 +146,9 @@ export default function HeroSection() {
               end: "bottom top",
               scrub,
             },
-          })
+          });
         }
-      })
+      });
 
       // Subtle zoom-in effect on background video
       if (videoRef.current) {
@@ -142,11 +162,11 @@ export default function HeroSection() {
             end: "bottom top",
             scrub: true,
           },
-        })
+        });
       }
 
       // 🎯 Scroll-trigger heartbeat pulse on CTA
-      const ctaButton = ctaRef.current?.querySelector(".pulse-btn")
+      const ctaButton = ctaRef.current?.querySelector(".pulse-btn");
       if (ctaButton) {
         ScrollTrigger.create({
           trigger: ctaButton,
@@ -161,19 +181,19 @@ export default function HeroSection() {
                 ease: "power1.inOut",
                 yoyo: true,
                 repeat: 3,
-              }
-            )
+              },
+            );
           },
-        })
+        });
       }
-    }, heroRef)
+    }, heroRef);
 
-    return () => ctx.revert()
-  }, [])
+    return () => ctx.revert();
+  }, []);
 
   const scrollToStory = () => {
-    document.getElementById("story")?.scrollIntoView({ behavior: "smooth" })
-  }
+    document.getElementById("story")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   // --- Video Player Handlers ---
   const handlePlayPause = () => {
@@ -191,7 +211,9 @@ export default function HeroSection() {
   const handleTimeUpdate = () => {
     if (videoRef.current) {
       setCurrentTime(videoRef.current.currentTime);
-      setProgress((videoRef.current.currentTime / videoRef.current.duration) * 100);
+      setProgress(
+        (videoRef.current.currentTime / videoRef.current.duration) * 100,
+      );
     }
   };
 
@@ -210,29 +232,45 @@ export default function HeroSection() {
     return `${minutes}:${seconds}`;
   };
 
-
   return (
-    <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section
+      ref={heroRef}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
       {/* 🎥 Chicken Farm Video Background */}
       <div className="absolute inset-0 -z-10">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover brightness-[0.9]"
-        >
-          <source src="https://drive.google.com/file/d/1YhLukcUm9nhticq4kaOSqLN6TbFFgMjw/view?usp=drive_link" type="video/mp4" />
-        </video>
+        {!videoError ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            onError={() => setVideoError(true)}
+            className="w-full h-full object-cover brightness-[0.9]"
+          >
+            <source src="/chicken-farm.mp4" type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            src="/cock-farm-village-chicken.jpg"
+            alt="Chicken Farm Background"
+            className="w-full h-full object-cover brightness-[0.9]"
+          />
+        )}
+
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/70" />
       </div>
 
       {/* Floating Text */}
-      <ScrollFloat speed={0.3} className="absolute inset-0 z-5 pointer-events-none">
-        <div ref={floatingTextRef} className="absolute inset-0 text-white/50 font-light">
-
-        </div>
+      <ScrollFloat
+        speed={0.3}
+        className="absolute inset-0 z-5 pointer-events-none"
+      >
+        <div
+          ref={floatingTextRef}
+          className="absolute inset-0 text-white/50 font-light"
+        ></div>
       </ScrollFloat>
 
       {/* Main Content */}
@@ -264,9 +302,12 @@ export default function HeroSection() {
           ref={subtitleRef}
           className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto font-medium text-white/90"
         >
-          AI-powered chicken health diagnosis helping farmers detect diseases instantly.
+          AI-powered chicken health diagnosis helping farmers detect diseases
+          instantly.
           <br />
-          <span className="text-yellow-300">Because every chicken deserves the best care.</span>
+          <span className="text-yellow-300">
+            Because every chicken deserves the best care.
+          </span>
         </p>
 
         {/* CTA Buttons */}
@@ -281,7 +322,11 @@ export default function HeroSection() {
       transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
       hover:scale-110 hover:shadow-[0_0_25px_rgba(255,200,0,0.5)]
     "
-            onClick={() => document.getElementById('diagnosis')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() =>
+              document
+                .getElementById("diagnosis")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
           >
             <span className="relative z-10">Try Diagnosis Tool</span>
 
@@ -308,7 +353,9 @@ export default function HeroSection() {
         <div className="w-8 h-12 border-2 border-white/80 rounded-full flex justify-center items-start bg-white/10 group-hover:bg-white/20 transition-all duration-300 shadow-md">
           <ArrowDown className="w-4 h-4 text-white mt-2 animate-bounce" />
         </div>
-        <p className="text-white/80 text-sm group-hover:text-white font-medium">Scroll to explore</p>
+        <p className="text-white/80 text-sm group-hover:text-white font-medium">
+          Scroll to explore
+        </p>
       </div>
       {/* 🎬 Modern Video Modal */}
       {isModalOpen && (
