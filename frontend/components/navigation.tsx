@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut, User as UserIcon, LayoutDashboard } from "lucide-react";
+import { Menu, X, LogOut, User as UserIcon, LayoutDashboard, Clock } from "lucide-react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -73,8 +73,8 @@ export default function Navigation() {
     <nav
       ref={navRef}
       className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${isScrolled
-          ? "bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-lg"
-          : "bg-transparent backdrop-blur-0 border-transparent shadow-none"
+        ? "bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-lg"
+        : "bg-transparent backdrop-blur-0 border-transparent shadow-none"
         }`}
     >
       <div className="container mx-auto px-6 py-4 relative">
@@ -111,8 +111,8 @@ export default function Navigation() {
                 key={id}
                 onClick={() => scrollToSection(id)}
                 className={`font-medium transition-all duration-300 hover:scale-105 ${isScrolled
-                    ? "text-gray-600 hover:text-gray-900"
-                    : "text-white/80 hover:text-white"
+                  ? "text-gray-600 hover:text-gray-900"
+                  : "text-white/80 hover:text-white"
                   }`}
               >
                 {label}
@@ -129,7 +129,7 @@ export default function Navigation() {
               </Button>
             ) : (
               <div className="relative">
-                
+
                 {/* Avatar */}
                 <button
                   onClick={toggleDropdown}
@@ -171,6 +171,17 @@ export default function Navigation() {
 
                     <button
                       onClick={() => {
+                        router.push("/history");
+                        setDropdownOpen(false);
+                      }}
+                      className="flex w-full items-center gap-2 px-5 py-3 text-gray-700 hover:bg-gray-100 transition-colors"
+                    >
+                      <Clock className="w-4 h-4" />
+                      History
+                    </button>
+
+                    <button
+                      onClick={() => {
                         handleLogout();
                         setDropdownOpen(false);
                       }}
@@ -208,8 +219,8 @@ export default function Navigation() {
                   key={id}
                   onClick={() => scrollToSection(id)}
                   className={`text-left font-medium transition-colors ${isScrolled
-                      ? "text-gray-600 hover:text-gray-900"
-                      : "text-white/80 hover:text-white"
+                    ? "text-gray-600 hover:text-gray-900"
+                    : "text-white/80 hover:text-white"
                     }`}
                 >
                   {label}
@@ -230,6 +241,12 @@ export default function Navigation() {
                     className="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold mt-2"
                   >
                     Dashboard
+                  </Button>
+                  <Button
+                    onClick={() => router.push("/history")}
+                    className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold mt-2"
+                  >
+                    History
                   </Button>
                   <Button
                     onClick={handleLogout}

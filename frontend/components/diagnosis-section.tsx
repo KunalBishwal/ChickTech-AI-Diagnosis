@@ -19,7 +19,8 @@ import ScrollReveal from "@/components/reactbits/scroll-reveal";
 import ScrollFloat from "@/components/reactbits/scroll-float";
 import LiquidEther from "@/components/reactbits/liquid-ether";
 import { toast } from "sonner";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import RollingText from "@/components/ui/rolling-text";
 
@@ -131,35 +132,102 @@ export default function DiagnosisSection() {
     setConfidence(null);
     setAnimatedConfidence(0);
 
+    //   try {
+    //     const base64Data = imageBase64.split(",")[1];
+    //       // const response = await fetch("http://127.0.0.1:8080/predict", {
+    //     //   method: "POST",
+    //     //   headers: { "Content-Type": "application/json" },
+    //     //   body: JSON.stringify({ image: base64Data }),
+    //     // });
+    //     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/predict`, {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({ image: base64Data }),
+    //     });
+
+    //     const data = await response.json();
+
+    //     setTimeout(() => {
+    //       setIsScanning(false);
+    //       if (data && data.class && data.class.toLowerCase().includes("healthy")) {
+    //         setResult("healthy");
+    //       } else {
+    //         setResult("sick");
+    //       }
+    //       if (data.confidence) setConfidence(data.confidence);
+    //     }, 4000);
+    //   } catch (error) {
+    //     console.error("Prediction failed:", error);
+    //     setIsScanning(false);
+    //     setResult("sick");
+    //     toast.error("Could not connect to Flask backend ❌");
+    //   }
+    // };
+
     try {
       const base64Data = imageBase64.split(",")[1];
-        // const response = await fetch("http://127.0.0.1:8080/predict", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ image: base64Data }),
-      // });
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/predict`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64Data }),
-      });
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/predict`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: base64Data }),
+        }
+      );
+
+      // 🔥 Important fix
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`);
+      }
 
       const data = await response.json();
+      console.log("🔍 Backend response received:", data);
 
+      // Background save to Firestore (don't await so UI stays fast)
+      const user = auth.currentUser;
+      if (user && data?.class) {
+        const payload = {
+          user_id: user.uid,
+          disease: data.class,
+          confidence: data.confidence ?? 0,
+          created_at: serverTimestamp(),
+        };
+        console.log("💾 Attempting to save to Firestore:", payload);
+
+        addDoc(collection(db, "predictions"), payload)
+          .then(() => {
+            console.log("✅ Prediction saved to Firestore successfully!");
+          })
+          .catch((dbErr) => {
+            console.error("❌ Firestore Save Error:", dbErr);
+          });
+      } else {
+        console.log("⚠️ Skip Firestore save:", { hasUser: !!user, hasClass: !!data?.class });
+      }
+
+      // Show result after the minimum scanning delay
       setTimeout(() => {
         setIsScanning(false);
-        if (data && data.class && data.class.toLowerCase().includes("healthy")) {
+
+        if (data?.class?.toLowerCase().includes("healthy")) {
           setResult("healthy");
         } else {
           setResult("sick");
         }
-        if (data.confidence) setConfidence(data.confidence);
-      }, 4000);
+
+        if (data?.confidence) {
+          setConfidence(data.confidence);
+        }
+      }, 3000); // Reduced to 3s for better feel
+
     } catch (error) {
       console.error("Prediction failed:", error);
       setIsScanning(false);
-      setResult("sick");
-      toast.error("Could not connect to Flask backend ❌");
+
+      toast.error(
+        "Analysis failed. Please check your connection and try again."
+      );
     }
   };
 
@@ -226,82 +294,82 @@ export default function DiagnosisSection() {
       <div className="container mx-auto px-6 relative z-10">
 
         {/* 🎬 Demo Video Section */}
-<ScrollReveal direction="up" distance={80} duration={1.1}>
-  <div className="flex flex-col items-center mb-24 space-y-6">
+        <ScrollReveal direction="up" distance={80} duration={1.1}>
+          <div className="flex flex-col items-center mb-24 space-y-6">
 
-    <h3 className="text-3xl md:text-4xl font-semibold text-gray-900 text-center">
-      See ChickTech AI in Action
-    </h3>
+            <h3 className="text-3xl md:text-4xl font-semibold text-gray-900 text-center">
+              See ChickTech AI in Action
+            </h3>
 
-    <p className="text-gray-600 text-center max-w-2xl">
-      Watch how our intelligent system analyzes chicken health — real demo below.
-    </p>
+            <p className="text-gray-600 text-center max-w-2xl">
+              Watch how our intelligent system analyzes chicken health — real demo below.
+            </p>
 
-    {/* 🪄 Interactive Video Preview */}
-    <div
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={() => {
-        if (!videoError) setIsVideoOpen(true);
-      }}
-      className="relative group cursor-pointer rounded-2xl overflow-hidden border border-white/40 shadow-2xl w-[260px] h-[150px] md:w-[320px] md:h-[180px] bg-gradient-to-br from-white/80 to-white/30 backdrop-blur-md hover:scale-[1.03] transition-transform duration-500"
-    >
-
-      {!videoError ? (
-        <VideoPlayer style={{ width: "100%", height: "100%" }}>
-          <VideoPlayerContent
-            src="/demo.mp4"
-            autoPlay
-            muted
-            loop
-            slot="media"
-            className="w-full h-full object-cover"
-            onError={() => setVideoError(true)}
-          />
-        </VideoPlayer>
-      ) : (
-        <div className="relative w-full h-full">
-          <img
-            src="/cock-farm-village-chicken.jpg"
-            alt="Demo fallback"
-            className="w-full h-full object-cover"
-          />
-
-          {/* Hover Overlay Button */}
-          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(
-                  "https://drive.google.com/file/d/1IKE59orfBnIVvB3lBTzLOPDp5w_xczP-/view?usp=sharing",
-                  "_blank"
-                );
+            {/* 🪄 Interactive Video Preview */}
+            <div
+              onMouseMove={handleMouseMove}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={() => {
+                if (!videoError) setIsVideoOpen(true);
               }}
-              className="bg-white text-black font-semibold px-4 py-2 shadow-lg hover:scale-105 transition"
+              className="relative group cursor-pointer rounded-2xl overflow-hidden border border-white/40 shadow-2xl w-[260px] h-[150px] md:w-[320px] md:h-[180px] bg-gradient-to-br from-white/80 to-white/30 backdrop-blur-md hover:scale-[1.03] transition-transform duration-500"
             >
-              🔗 Link to Demo Video
-            </Button>
-          </div>
-        </div>
-      )}
 
-      {/* Floating Play Cursor */}
-      {!videoError && (
-        <div
-          ref={cursorRef}
-          className="absolute top-0 left-0 pointer-events-none opacity-0"
-        >
-          <div className="flex items-center space-x-2 bg-white/80 text-gray-900 px-3 py-1 rounded-full shadow-md backdrop-blur-sm text-sm font-medium">
-            <Play className="w-4 h-4" />
-            <span>Play</span>
-          </div>
-        </div>
-      )}
+              {!videoError ? (
+                <VideoPlayer style={{ width: "100%", height: "100%" }}>
+                  <VideoPlayerContent
+                    src="/demo.mp4"
+                    autoPlay
+                    muted
+                    loop
+                    slot="media"
+                    className="w-full h-full object-cover"
+                    onError={() => setVideoError(true)}
+                  />
+                </VideoPlayer>
+              ) : (
+                <div className="relative w-full h-full">
+                  <img
+                    src="/cock-farm-village-chicken.jpg"
+                    alt="Demo fallback"
+                    className="w-full h-full object-cover"
+                  />
 
-    </div>
-  </div>
-</ScrollReveal>
+                  {/* Hover Overlay Button */}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(
+                          "https://drive.google.com/file/d/1IKE59orfBnIVvB3lBTzLOPDp5w_xczP-/view?usp=sharing",
+                          "_blank"
+                        );
+                      }}
+                      className="bg-white text-black font-semibold px-4 py-2 shadow-lg hover:scale-105 transition"
+                    >
+                      🔗 Link to Demo Video
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Floating Play Cursor */}
+              {!videoError && (
+                <div
+                  ref={cursorRef}
+                  className="absolute top-0 left-0 pointer-events-none opacity-0"
+                >
+                  <div className="flex items-center space-x-2 bg-white/80 text-gray-900 px-3 py-1 rounded-full shadow-md backdrop-blur-sm text-sm font-medium">
+                    <Play className="w-4 h-4" />
+                    <span>Play</span>
+                  </div>
+                </div>
+              )}
+
+            </div>
+          </div>
+        </ScrollReveal>
 
         {/* Fullscreen Video Modal */}
         <AnimatePresence>

@@ -1,5 +1,5 @@
 // lib/firebase.ts
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
@@ -13,7 +13,13 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+// Debug log to verify project ID is loading (it should print in browser console)
+if (typeof window !== "undefined") {
+  console.log("🔥 Firebase Project ID:", firebaseConfig.projectId);
+}
+
+// Initialize Firebase - check if already initialized (common in Next.js dev mode)
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
