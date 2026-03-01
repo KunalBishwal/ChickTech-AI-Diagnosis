@@ -41,16 +41,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 via-white to-orange-50 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 via-white to-orange-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 relative overflow-hidden">
       {/* Subtle floating glow */}
       <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-gradient-to-br from-yellow-200 via-orange-300 to-pink-300 rounded-full blur-[160px] opacity-40 animate-pulse" />
       <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-gradient-to-tr from-orange-200 via-yellow-100 to-pink-200 rounded-full blur-[120px] opacity-40 animate-pulse" />
 
-      <div className="relative bg-white/80 backdrop-blur-xl p-10 rounded-[2rem] shadow-[0_0_50px_rgba(255,165,0,0.2)] w-full max-w-md text-center border border-white/40 transition-all hover:scale-[1.01] duration-300">
+      <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl p-10 rounded-[2rem] shadow-[0_0_50px_rgba(255,165,0,0.2)] dark:shadow-[0_0_50px_rgba(255,165,0,0.1)] w-full max-w-md text-center border border-white/40 dark:border-gray-700/40 transition-all hover:scale-[1.01] duration-300">
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-transparent bg-clip-text">
           Welcome Back
         </h1>
-        <p className="text-gray-500 mb-8">
+        <p className="text-gray-500 dark:text-gray-400 mb-8">
           Sign in to access <span className="font-semibold text-orange-500">ChickTech AI Tools</span>
         </p>
 
@@ -60,14 +60,14 @@ export default function LoginPage() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
           />
 
           <Button
@@ -79,16 +79,16 @@ export default function LoginPage() {
             {!loading && "Sign in with Email"}
           </Button>
 
-          <div className="my-4 text-gray-400 text-sm flex items-center justify-center gap-2">
-            <div className="w-10 h-[1px] bg-gray-200"></div>
+          <div className="my-4 text-gray-400 dark:text-gray-500 text-sm flex items-center justify-center gap-2">
+            <div className="w-10 h-[1px] bg-gray-200 dark:bg-gray-600"></div>
             or
-            <div className="w-10 h-[1px] bg-gray-200"></div>
+            <div className="w-10 h-[1px] bg-gray-200 dark:bg-gray-600"></div>
           </div>
 
           <Button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full bg-white text-gray-800 border border-gray-300 py-3 rounded-xl hover:bg-gray-100 shadow-sm flex items-center justify-center gap-3 transition-all"
+            className="w-full bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 shadow-sm flex items-center justify-center gap-3 transition-all"
           >
             <img
               src="/google.svg"
@@ -99,7 +99,7 @@ export default function LoginPage() {
           </Button>
         </div>
 
-        <p className="mt-8 text-sm text-gray-500">
+        <p className="mt-8 text-sm text-gray-500 dark:text-gray-400">
           By continuing, you agree to our{" "}
           <span className="text-orange-500 font-medium cursor-pointer hover:underline">Privacy Policy</span>
         </p>

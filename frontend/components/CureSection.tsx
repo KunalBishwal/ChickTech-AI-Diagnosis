@@ -45,7 +45,7 @@ export default function CureSection() {
         <section
             id="cure-section"
             ref={sectionRef}
-            className="relative py-32 overflow-hidden bg-linear-to-b from-red-50 via-white to-orange-50"
+            className="relative py-32 overflow-hidden bg-linear-to-b from-red-50 via-white to-orange-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900"
         >
             <LiquidEther
                 colors={["#f87171", "#fbbf24", "#fb923c", "#facc15"]}
@@ -61,54 +61,54 @@ export default function CureSection() {
                     <HeartPulse className="w-10 h-10 text-white" />
                 </div>
 
-                <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900">
+                <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
                     Recovery &{" "}
                     <span className="bg-linear-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
                         Prevention
                     </span>
                 </h2>
-                <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-16">
+                <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto mb-16">
                     Coccidiosis is common but treatable. Follow these expert-recommended
                     steps to restore your flock’s health and prevent recurrence.
                 </p>
 
                 {/* Cure Cards */}
                 <div className="grid md:grid-cols-3 gap-8 text-left max-w-6xl mx-auto">
-                    <div className="p-8 bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-red-100 hover:scale-[1.03] transition-all duration-300">
+                    <div className="p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-3xl shadow-xl border border-red-100 dark:border-red-900/30 hover:scale-[1.03] transition-all duration-300">
                         <Leaf className="w-10 h-10 text-green-500 mb-4" />
-                        <h3 className="text-2xl font-bold mb-3 text-gray-900">
+                        <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
                             1️⃣ Isolate & Sanitize
                         </h3>
-                        <p className="text-gray-700">
+                        <p className="text-gray-700 dark:text-gray-300">
                             Move infected chickens away. Clean feeders, waterers, and litter
                             thoroughly using mild disinfectants.
                         </p>
                     </div>
 
-                    <div className="p-8 bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-red-100 hover:scale-[1.03] transition-all duration-300">
+                    <div className="p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-3xl shadow-xl border border-red-100 dark:border-red-900/30 hover:scale-[1.03] transition-all duration-300">
                         <Droplets className="w-10 h-10 text-blue-500 mb-4" />
-                        <h3 className="text-2xl font-bold mb-3 text-gray-900">
+                        <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
                             2️⃣ Provide Medication
                         </h3>
-                        <p className="text-gray-700">
+                        <p className="text-gray-700 dark:text-gray-300">
                             Administer coccidiostats (e.g., Amprolium or Toltrazuril) in
                             drinking water for 3–5 days as prescribed by a vet.
                         </p>
                     </div>
 
-                    <div className="p-8 bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-red-100 hover:scale-[1.03] transition-all duration-300">
+                    <div className="p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-3xl shadow-xl border border-red-100 dark:border-red-900/30 hover:scale-[1.03] transition-all duration-300">
                         <HeartPulse className="w-10 h-10 text-pink-500 mb-4" />
-                        <h3 className="text-2xl font-bold mb-3 text-gray-900">
+                        <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
                             3️⃣ Strengthen Immunity
                         </h3>
-                        <p className="text-gray-700">
+                        <p className="text-gray-700 dark:text-gray-300">
                             Add vitamins (A, D3, E, K) and probiotics to boost recovery.
                             Maintain dry bedding and regular cleaning.
                         </p>
                     </div>
                 </div>
 
-    
+
                 <div className="mt-16">
                     {[
                         { label: "AI Diagnosis", id: "diagnosis" }

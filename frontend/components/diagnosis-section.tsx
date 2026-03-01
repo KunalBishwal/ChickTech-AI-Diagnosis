@@ -13,6 +13,7 @@ import {
   Sparkles,
   X,
   Play,
+  Clock,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollReveal from "@/components/reactbits/scroll-reveal";
@@ -283,7 +284,7 @@ export default function DiagnosisSection() {
     <section
       id="diagnosis"
       ref={sectionRef}
-      className="py-32 relative overflow-hidden bg-linear-to-b from-blue-50 via-white to-purple-50"
+      className="py-32 relative overflow-hidden bg-linear-to-b from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900"
     >
       <LiquidEther
         colors={["#3b82f6", "#8b5cf6", "#06b6d4", "#10b981"]}
@@ -426,14 +427,14 @@ export default function DiagnosisSection() {
             <div className="w-20 h-20 bg-linear-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
               <Camera className="w-10 h-10 text-white" />
             </div>
-            <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900">
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
               Experience the{" "}
               <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-purple-600">
                 Magic
               </span>
             </h2>
 
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto">
               Upload a photo of your chicken and let our AI reveal its health status.
             </p>
           </div>
@@ -442,7 +443,7 @@ export default function DiagnosisSection() {
         {/* ---- Diagnosis Tool ---- */}
         <ScrollFloat speed={0.1}>
           <div ref={toolRef} className="max-w-3xl mx-auto opacity-0">
-            <div className="p-12 bg-white/80 backdrop-blur-sm border-2 border-white/50 shadow-2xl rounded-3xl">
+            <div className="p-12 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-2 border-white/50 dark:border-gray-700/50 shadow-2xl rounded-3xl">
               {!uploadedImage ? (
                 <ScrollReveal direction="up" delay={0.3}>
                   <div className="text-center">
@@ -450,7 +451,7 @@ export default function DiagnosisSection() {
                       <div className="w-24 h-24 bg-linear-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <Upload className="w-12 h-12 text-blue-600" />
                       </div>
-                      <h3 className="text-2xl font-bold mb-4 text-gray-900">
+                      <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
                         Upload Your Chicken Photo
                       </h3>
                       <input
@@ -460,20 +461,32 @@ export default function DiagnosisSection() {
                         onChange={handleFileUpload}
                         className="hidden"
                       />
-                      <Button
-                        size="lg"
-                        onClick={() =>
-                          handleProtectedAction(() =>
-                            fileInputRef.current?.click()
-                          )
-                        }
-                        className="bg-linear-to-r from-blue-500 to-purple-500 text-white px-8 py-4 text-lg shadow-xl hover:scale-105"
-                      >
-                        <Sparkles className="w-5 h-5 mr-2" />
-                        Select Image
-                      </Button>
+                      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <Button
+                          size="lg"
+                          onClick={() =>
+                            handleProtectedAction(() =>
+                              fileInputRef.current?.click()
+                            )
+                          }
+                          className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 text-lg shadow-xl hover:scale-105"
+                        >
+                          <Sparkles className="w-5 h-5 mr-2" />
+                          Select Image
+                        </Button>
+
+                        <Button
+                          variant="outline"
+                          size="lg"
+                          onClick={() => handleProtectedAction(() => router.push("/history"))}
+                          className="px-8 py-4 text-lg border-2 hover:text-purple-500 hover:bg-purple-50 hover:scale-105 transition-all duration-300"
+                        >
+                          <Clock className="w-5 h-5 mr-2 text-purple-500" />
+                          View History
+                        </Button>
+                      </div>
                     </div>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">
                       Supports JPG, PNG, and WebP formats • Max 10MB
                     </p>
                   </div>
@@ -506,7 +519,7 @@ export default function DiagnosisSection() {
                       <h3 className="text-2xl font-bold mb-4 text-gray-900">
                         AI Analysis in Progress
                       </h3>
-                      <p className="text-gray-600 text-lg">
+                      <p className="text-gray-600 dark:text-gray-400 text-lg">
                         Analyzing your image using deep learning...
                       </p>
                     </div>
@@ -519,7 +532,7 @@ export default function DiagnosisSection() {
                             <h3 className="text-3xl font-bold text-green-600">
                               Healthy Chicken 🐔
                             </h3>
-                            <p className="text-gray-700 mt-3 text-lg">
+                            <p className="text-gray-700 dark:text-gray-300 mt-3 text-lg">
                               Great job! Your flock seems perfectly fine.
                             </p>
                           </>
@@ -529,7 +542,7 @@ export default function DiagnosisSection() {
                             <h3 className="text-3xl font-bold text-red-600">
                               Coccidiosis Detected
                             </h3>
-                            <p className="text-gray-700 mt-3 text-lg max-w-xl mx-auto">
+                            <p className="text-gray-700 dark:text-gray-300 mt-3 text-lg max-w-xl mx-auto">
                               Our AI suspects possible infection symptoms in this chicken image.
                             </p>
                             <div className="mt-6">
@@ -566,10 +579,10 @@ export default function DiagnosisSection() {
 
                         {confidence !== null && (
                           <div className="mt-6 max-w-md mx-auto">
-                            <p className="text-gray-700 mb-2 font-medium">
+                            <p className="text-gray-700 dark:text-gray-300 mb-2 font-medium">
                               Confidence: {animatedConfidence.toFixed(2)}%
                             </p>
-                            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
                               <div
                                 className={`h-3 rounded-full transition-all duration-700 ease-out ${result === "healthy"
                                   ? "bg-linear-to-r from-green-400 to-emerald-500"
@@ -583,14 +596,25 @@ export default function DiagnosisSection() {
                       </div>
                     )
                   )}
-                  <Button
-                    variant="outline"
-                    onClick={resetTool}
-                    size="lg"
-                    className="px-8 py-4 text-lg border-2 hover:text-blue-500 hover:bg-gray-100 hover:scale-105 transition-all duration-300 mt-6"
-                  >
-                    Analyze Another Image
-                  </Button>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+                    <Button
+                      variant="outline"
+                      onClick={resetTool}
+                      size="lg"
+                      className="px-8 py-4 text-lg border-2 hover:text-blue-500 hover:bg-gray-100 hover:scale-105 transition-all duration-300"
+                    >
+                      Analyze Another Image
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={() => handleProtectedAction(() => router.push("/history"))}
+                      className="px-8 py-4 text-lg border-2 hover:text-purple-500 hover:bg-purple-50 hover:scale-105 transition-all duration-300"
+                    >
+                      <Clock className="w-5 h-5 mr-2 text-purple-500" />
+                      View Full History
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>

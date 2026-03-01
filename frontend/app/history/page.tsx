@@ -23,6 +23,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/navigation";
+import dynamic from "next/dynamic";
+
+const PrismaticBurst = dynamic(
+    () => import("@/components/reactbits/prismatic-burst"),
+    { ssr: false }
+);
 
 interface Prediction {
     id: string;
@@ -94,7 +100,7 @@ export default function HistoryPage() {
 
     if (authLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
                 <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
             </div>
         );
@@ -103,8 +109,24 @@ export default function HistoryPage() {
     return (
         <>
             <Navigation />
-            <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-28 pb-16 px-4 sm:px-6">
-                <div className="container mx-auto max-w-4xl">
+            <main className="min-h-screen relative pt-28 pb-16 px-4 sm:px-6">
+                {/* PrismaticBurst Background */}
+                <div className="fixed inset-0 z-0">
+                    <PrismaticBurst
+                        animationType="rotate3d"
+                        intensity={1.5}
+                        speed={0.3}
+                        distort={0}
+                        paused={false}
+                        offset={{ x: 0, y: 0 }}
+                        hoverDampness={0.25}
+                        rayCount={0}
+                        mixBlendMode="none"
+                        colors={['#ff007a', '#4d3dff', '#ffffff']}
+                    />
+                </div>
+
+                <div className="container mx-auto max-w-4xl relative z-10">
                     {/* Header */}
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -115,13 +137,13 @@ export default function HistoryPage() {
                         <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
                             <Clock className="w-8 h-8 text-white" />
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+                        <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 drop-shadow-lg">
                             Prediction{" "}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
                                 History
                             </span>
                         </h1>
-                        <p className="text-gray-600 text-lg max-w-xl mx-auto">
+                        <p className="text-gray-300 text-lg max-w-xl mx-auto drop-shadow-md">
                             Review all your past AI diagnoses in one place.
                         </p>
                     </motion.div>
@@ -136,7 +158,7 @@ export default function HistoryPage() {
                         <Button
                             variant="outline"
                             onClick={() => router.push("/")}
-                            className="gap-2 border-2 hover:bg-gray-100 hover:scale-105 transition-all duration-300"
+                            className="gap-2 border-2 border-white/20 bg-white/10 dark:bg-white/5 backdrop-blur-md text-white hover:bg-white/20 hover:scale-105 transition-all duration-300"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Back to Home
@@ -146,8 +168,8 @@ export default function HistoryPage() {
                     {/* Content */}
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-24">
-                            <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
-                            <p className="text-gray-500 text-lg">Loading your history...</p>
+                            <Loader2 className="w-12 h-12 text-blue-400 animate-spin mb-4" />
+                            <p className="text-gray-300 text-lg">Loading your history...</p>
                         </div>
                     ) : predictions.length === 0 ? (
                         <motion.div
@@ -156,13 +178,13 @@ export default function HistoryPage() {
                             transition={{ duration: 0.5 }}
                             className="text-center py-24"
                         >
-                            <div className="w-20 h-20 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <Inbox className="w-10 h-10 text-gray-500" />
+                            <div className="w-20 h-20 bg-gradient-to-br from-gray-600 to-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <Inbox className="w-10 h-10 text-gray-300" />
                             </div>
-                            <h3 className="text-2xl font-bold text-gray-700 mb-3">
+                            <h3 className="text-2xl font-bold text-white mb-3">
                                 No predictions yet
                             </h3>
-                            <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                            <p className="text-gray-400 mb-6 max-w-md mx-auto">
                                 Upload a chicken image in the AI Diagnosis section to get started. Your results will appear here.
                             </p>
                             <Button
@@ -189,15 +211,15 @@ export default function HistoryPage() {
                                                 delay: index * 0.08,
                                                 ease: "easeOut",
                                             }}
-                                            className="p-6 bg-white/80 backdrop-blur-sm border-2 border-white/50 shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 group"
+                                            className="p-6 bg-white/10 dark:bg-gray-900/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/40 shadow-lg rounded-2xl hover:shadow-xl hover:bg-white/15 transition-all duration-300 group"
                                         >
                                             <div className="flex items-center justify-between flex-wrap gap-4">
                                                 {/* Left: Status + Disease */}
                                                 <div className="flex items-center gap-4">
                                                     <div
                                                         className={`w-12 h-12 rounded-full flex items-center justify-center shadow-md ${isHealthy
-                                                                ? "bg-gradient-to-br from-green-400 to-emerald-500"
-                                                                : "bg-gradient-to-br from-red-400 to-orange-500"
+                                                            ? "bg-gradient-to-br from-green-400 to-emerald-500"
+                                                            : "bg-gradient-to-br from-red-400 to-orange-500"
                                                             }`}
                                                     >
                                                         {isHealthy ? (
@@ -208,12 +230,12 @@ export default function HistoryPage() {
                                                     </div>
                                                     <div>
                                                         <h4
-                                                            className={`text-lg font-bold ${isHealthy ? "text-green-600" : "text-red-600"
+                                                            className={`text-lg font-bold ${isHealthy ? "text-green-400" : "text-red-400"
                                                                 }`}
                                                         >
                                                             {pred.disease}
                                                         </h4>
-                                                        <p className="text-sm text-gray-500">
+                                                        <p className="text-sm text-gray-400">
                                                             {formatDate(pred.created_at)}
                                                         </p>
                                                     </div>
@@ -222,15 +244,15 @@ export default function HistoryPage() {
                                                 {/* Right: Confidence */}
                                                 <div className="flex items-center gap-3">
                                                     <Activity
-                                                        className={`w-5 h-5 ${isHealthy ? "text-green-500" : "text-red-500"
+                                                        className={`w-5 h-5 ${isHealthy ? "text-green-400" : "text-red-400"
                                                             }`}
                                                     />
                                                     <div className="text-right">
-                                                        <p className="text-sm text-gray-500 font-medium">
+                                                        <p className="text-sm text-gray-400 font-medium">
                                                             Confidence
                                                         </p>
                                                         <p
-                                                            className={`text-xl font-bold ${isHealthy ? "text-green-600" : "text-red-600"
+                                                            className={`text-xl font-bold ${isHealthy ? "text-green-400" : "text-red-400"
                                                                 }`}
                                                         >
                                                             {confidencePercent}%
@@ -240,7 +262,7 @@ export default function HistoryPage() {
                                             </div>
 
                                             {/* Confidence Bar */}
-                                            <div className="mt-4 w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                            <div className="mt-4 w-full bg-white/10 dark:bg-gray-700/40 rounded-full h-2 overflow-hidden">
                                                 <motion.div
                                                     initial={{ width: 0 }}
                                                     animate={{ width: `${confidencePercent}%` }}
@@ -250,8 +272,8 @@ export default function HistoryPage() {
                                                         ease: "easeOut",
                                                     }}
                                                     className={`h-2 rounded-full ${isHealthy
-                                                            ? "bg-gradient-to-r from-green-400 to-emerald-500"
-                                                            : "bg-gradient-to-r from-red-400 to-orange-500"
+                                                        ? "bg-gradient-to-r from-green-400 to-emerald-500"
+                                                        : "bg-gradient-to-r from-red-400 to-orange-500"
                                                         }`}
                                                 />
                                             </div>
@@ -270,12 +292,12 @@ export default function HistoryPage() {
                             transition={{ duration: 0.5, delay: 0.5 }}
                             className="mt-10 text-center"
                         >
-                            <p className="text-gray-500 text-sm">
+                            <p className="text-gray-400 text-sm">
                                 Showing {predictions.length} prediction
                                 {predictions.length !== 1 ? "s" : ""} •{" "}
                                 <button
                                     onClick={() => router.push("/")}
-                                    className="text-blue-500 hover:text-blue-700 underline underline-offset-2 transition-colors"
+                                    className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"
                                 >
                                     Run a new diagnosis
                                 </button>

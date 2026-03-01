@@ -101,7 +101,7 @@ export default function FeaturesSection() {
     <section
       id="features"
       ref={sectionRef}
-      className="relative overflow-hidden py-32 bg-gradient-to-b from-gray-50 to-white"
+      className="relative overflow-hidden py-32 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950"
     >
       <LiquidEther
         colors={["#8b5cf6", "#3b82f6", "#06b6d4", "#10b981"]}
@@ -111,13 +111,13 @@ export default function FeaturesSection() {
 
       {/* Header */}
       <div className="text-center mb-24 px-6 relative z-10">
-        <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900">
+        <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
           Project{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">
             Highlights
           </span>
         </h2>
-        <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+        <p className="text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto leading-relaxed">
           A cinematic walkthrough of our student-built AI system — blending
           technology, learning, and design. Scroll to explore the journey. ✨
         </p>
@@ -176,18 +176,18 @@ export default function FeaturesSection() {
             key={i}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className={`feature-card group relative p-8 rounded-3xl backdrop-blur-xl border border-white/40 shadow-xl transition-all duration-500 bg-gradient-to-br ${feature.gradient}
-              hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-200/40 transform-gpu will-change-transform`}
+            className={`feature-card group relative p-8 rounded-3xl backdrop-blur-xl border border-white/40 dark:border-gray-700/40 shadow-xl transition-all duration-500 bg-gradient-to-br ${feature.gradient}
+              hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-200/40 dark:hover:shadow-purple-900/40 transform-gpu will-change-transform`}
             style={{ transformStyle: "preserve-3d" }}
           >
             <div className="flex flex-col items-start space-y-4">
-              <div className="p-3 rounded-2xl bg-white/50 shadow-inner backdrop-blur-md transform transition-transform duration-300 group-hover:rotate-[4deg]">
+              <div className="p-3 rounded-2xl bg-white/50 dark:bg-gray-800/50 shadow-inner backdrop-blur-md transform transition-transform duration-300 group-hover:rotate-[4deg]">
                 {feature.icon}
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
                 {feature.title}
               </h3>
-              <p className="text-gray-700 text-base leading-relaxed">
+              <p className="text-gray-700 dark:text-gray-300 text-base leading-relaxed">
                 {feature.desc}
               </p>
             </div>

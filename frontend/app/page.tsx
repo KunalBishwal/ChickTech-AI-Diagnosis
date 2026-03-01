@@ -41,17 +41,17 @@ export default function HomePage() {
   }, [])
 
   return (
-    <main ref={mainRef} className="min-h-screen bg-background overflow-x-hidden">
+    <main ref={mainRef} className="min-h-screen bg-background overflow-x-hidden transition-colors duration-300">
       <Navigation />
       <div id="hero">
         <HeroSection />
       </div>
       <StorySection />
       <DiagnosisSection />
-      <CureSection /> 
+      <CureSection />
       <FeaturesSection />
 
-      <footer className="bg-gray-900 text-white py-16">
+      <footer className="bg-gray-900 dark:bg-black text-white py-16">
         <div className="container mx-auto px-6">
           <div className="text-center">
             <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 via-orange-400 to-red-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
