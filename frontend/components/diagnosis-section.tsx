@@ -14,7 +14,12 @@ import {
   X,
   Play,
   Clock,
+  AlertTriangle,
+  Stethoscope,
+  Bug,
 } from "lucide-react";
+
+type DiseaseType = "coccidiosis" | "external-lesion";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollReveal from "@/components/reactbits/scroll-reveal";
 import ScrollFloat from "@/components/reactbits/scroll-float";
@@ -44,13 +49,16 @@ export default function DiagnosisSection() {
   const router = useRouter();
 
   const [isScanning, setIsScanning] = useState(false);
-  const [result, setResult] = useState<"healthy" | "sick" | null>(null);
+  const [result, setResult] = useState<"healthy" | "sick" | "inconclusive" | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [confidence, setConfidence] = useState<number | null>(null);
   const [animatedConfidence, setAnimatedConfidence] = useState(0);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [diseaseType, setDiseaseType] = useState<DiseaseType>("coccidiosis");
+  const [diseaseName, setDiseaseName] = useState<string | null>(null);
+  const [recommendation, setRecommendation] = useState<string | null>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -132,6 +140,8 @@ export default function DiagnosisSection() {
     setResult(null);
     setConfidence(null);
     setAnimatedConfidence(0);
+    setDiseaseName(null);
+    setRecommendation(null);
 
     //   try {
     //     const base64Data = imageBase64.split(",")[1];
@@ -168,8 +178,13 @@ export default function DiagnosisSection() {
     try {
       const base64Data = imageBase64.split(",")[1];
 
+      // Route to correct endpoint based on disease type selection
+      const endpoint = diseaseType === "coccidiosis"
+        ? "/predict"
+        : "/predict/external-lesion";
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/predict`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -187,11 +202,13 @@ export default function DiagnosisSection() {
 
       // Background save to Firestore (don't await so UI stays fast)
       const user = auth.currentUser;
-      if (user && data?.class) {
+      if (user && (data?.class || data?.disease)) {
         const payload = {
           user_id: user.uid,
-          disease: data.class,
+          disease: data.disease || data.class,
           confidence: data.confidence ?? 0,
+          disease_type: diseaseType,
+          recommendation: data.recommendation || "",
           created_at: serverTimestamp(),
         };
         console.log("💾 Attempting to save to Firestore:", payload);
@@ -211,8 +228,14 @@ export default function DiagnosisSection() {
       setTimeout(() => {
         setIsScanning(false);
 
-        if (data?.class?.toLowerCase().includes("healthy")) {
+        const diseaseResult = (data?.disease || data?.class || "").toLowerCase();
+        setDiseaseName(data?.disease || data?.class || "Unknown");
+        setRecommendation(data?.recommendation || null);
+
+        if (diseaseResult.includes("healthy")) {
           setResult("healthy");
+        } else if (diseaseResult.includes("inconclusive")) {
+          setResult("inconclusive");
         } else {
           setResult("sick");
         }
@@ -447,7 +470,41 @@ export default function DiagnosisSection() {
               {!uploadedImage ? (
                 <ScrollReveal direction="up" delay={0.3}>
                   <div className="text-center">
-                    <div className="border-3 border-dashed border-gray-300 rounded-2xl p-16 mb-8 hover:border-blue-400 hover:bg-blue-50/50 transition-all duration-300 group">
+                    {/* Disease Type Selector */}
+                    <div className="mb-8">
+                      <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                        Select Detection Type
+                      </p>
+                      <div className="flex justify-center gap-3">
+                        <button
+                          onClick={() => setDiseaseType("coccidiosis")}
+                          className={`flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-300 border-2 ${diseaseType === "coccidiosis"
+                            ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white border-transparent shadow-lg scale-105"
+                            : "bg-white/50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 hover:scale-102"
+                            }`}
+                        >
+                          <Bug className="w-4 h-4" />
+                          Coccidiosis
+                        </button>
+                        <button
+                          onClick={() => setDiseaseType("external-lesion")}
+                          className={`flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-300 border-2 ${diseaseType === "external-lesion"
+                            ? "bg-gradient-to-r from-orange-500 to-red-500 text-white border-transparent shadow-lg scale-105"
+                            : "bg-white/50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-orange-300 dark:hover:border-orange-500 hover:scale-102"
+                            }`}
+                        >
+                          <Stethoscope className="w-4 h-4" />
+                          Bumblefoot & Fowlpox
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                        {diseaseType === "coccidiosis"
+                          ? "Detects coccidiosis from fecal samples"
+                          : "Detects Fowlpox & Bumblefoot from skin/foot images"}
+                      </p>
+                    </div>
+
+                    <div className="border-3 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-16 mb-8 hover:border-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-all duration-300 group">
                       <div className="w-24 h-24 bg-linear-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <Upload className="w-12 h-12 text-blue-600" />
                       </div>
@@ -530,21 +587,48 @@ export default function DiagnosisSection() {
                           <>
                             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
                             <h3 className="text-3xl font-bold text-green-600">
-                              Healthy Chicken 🐔
+                              {diseaseName || "Healthy"} 🐔
                             </h3>
                             <p className="text-gray-700 dark:text-gray-300 mt-3 text-lg">
                               Great job! Your flock seems perfectly fine.
                             </p>
+                            {recommendation && (
+                              <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm max-w-lg mx-auto italic">
+                                💡 {recommendation}
+                              </p>
+                            )}
+                          </>
+                        ) : result === "inconclusive" ? (
+                          <>
+                            <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
+                            <h3 className="text-3xl font-bold text-amber-600">
+                              Inconclusive Result ⚠️
+                            </h3>
+                            <p className="text-gray-700 dark:text-gray-300 mt-3 text-lg max-w-xl mx-auto">
+                              The AI confidence is too low to make a reliable diagnosis.
+                            </p>
+                            {recommendation && (
+                              <p className="text-amber-600 dark:text-amber-400 mt-3 text-sm max-w-lg mx-auto font-medium">
+                                📸 {recommendation}
+                              </p>
+                            )}
                           </>
                         ) : (
                           <>
                             <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
                             <h3 className="text-3xl font-bold text-red-600">
-                              Coccidiosis Detected
+                              {diseaseName || "Disease"} Detected
                             </h3>
                             <p className="text-gray-700 dark:text-gray-300 mt-3 text-lg max-w-xl mx-auto">
-                              Our AI suspects possible infection symptoms in this chicken image.
+                              Our AI has detected signs of {diseaseName?.toLowerCase() || "disease"} in this image.
                             </p>
+                            {recommendation && (
+                              <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 rounded-xl max-w-lg mx-auto">
+                                <p className="text-red-700 dark:text-red-300 text-sm text-left">
+                                  🩺 <span className="font-semibold">Recommendation:</span> {recommendation}
+                                </p>
+                              </div>
+                            )}
                             <div className="mt-6">
                               <Button
                                 size="lg"

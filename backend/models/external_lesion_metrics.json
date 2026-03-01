@@ -1,0 +1,40 @@
+{
+  "accuracy": 0.978494623655914,
+  "per_class": {
+    "Bumblefoot": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 9
+    },
+    "Fowlpox": {
+      "precision": 0.9167,
+      "recall": 0.9167,
+      "f1-score": 0.9167,
+      "support": 12
+    },
+    "Healthy": {
+      "precision": 0.9861,
+      "recall": 0.9861,
+      "f1-score": 0.9861,
+      "support": 72
+    }
+  },
+  "confusion_matrix": [
+    [
+      9,
+      0,
+      0
+    ],
+    [
+      0,
+      11,
+      1
+    ],
+    [
+      0,
+      1,
+      71
+    ]
+  ]
+}

@@ -5,19 +5,25 @@
 
 :root {
   /* ChickTech Theme - Soft, warm, and professional */
-  --background: oklch(0.98 0.01 85); /* Soft warm white */
-  --foreground: oklch(0.15 0.02 85); /* Deep warm gray */
-  --card: oklch(0.99 0.005 85); /* Slightly warmer white */
+  --background: oklch(0.98 0.01 85);
+  /* Soft warm white */
+  --foreground: oklch(0.15 0.02 85);
+  /* Deep warm gray */
+  --card: oklch(0.99 0.005 85);
+  /* Slightly warmer white */
   --card-foreground: oklch(0.15 0.02 85);
   --popover: oklch(0.99 0.005 85);
   --popover-foreground: oklch(0.15 0.02 85);
-  --primary: oklch(0.45 0.15 45); /* Warm orange-red - ChickTech brand */
+  --primary: oklch(0.45 0.15 45);
+  /* Warm orange-red - ChickTech brand */
   --primary-foreground: oklch(0.98 0.01 85);
-  --secondary: oklch(0.92 0.02 85); /* Soft warm gray */
+  --secondary: oklch(0.92 0.02 85);
+  /* Soft warm gray */
   --secondary-foreground: oklch(0.15 0.02 85);
   --muted: oklch(0.94 0.015 85);
   --muted-foreground: oklch(0.55 0.02 85);
-  --accent: oklch(0.65 0.12 35); /* Warm golden accent */
+  --accent: oklch(0.65 0.12 35);
+  /* Warm golden accent */
   --accent-foreground: oklch(0.98 0.01 85);
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(0.98 0.01 85);
@@ -115,6 +121,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -133,10 +140,12 @@
   }
 
   @keyframes float {
+
     0%,
     100% {
       transform: translateY(0px);
     }
+
     50% {
       transform: translateY(-20px);
     }
@@ -163,14 +172,12 @@
 
   /* Enhanced scanning line effect */
   .scan-line {
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(59, 130, 246, 0.8),
-      rgba(147, 51, 234, 0.8),
-      rgba(59, 130, 246, 0.8),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(59, 130, 246, 0.8),
+        rgba(147, 51, 234, 0.8),
+        rgba(59, 130, 246, 0.8),
+        transparent);
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
   }
 
@@ -241,9 +248,11 @@ html {
   0% {
     box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.5);
   }
+
   70% {
     box-shadow: 0 0 0 8px rgba(251, 191, 36, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
   }
@@ -258,11 +267,13 @@ html {
     opacity: 0;
     transform: scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
   }
 }
+
 .animate-fadeIn {
   animation: fadeIn 0.4s ease-out forwards;
 }

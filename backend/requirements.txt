@@ -12,4 +12,5 @@ joblib
 Flask
 Flask-Cors
 scipy
+scikit-learn
 # -e .

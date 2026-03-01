@@ -1,5 +1,6 @@
 commands.txt
 read.txt
+minor_project.txt
 # Secrets
 .env
 *.key

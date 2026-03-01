@@ -2,73 +2,61 @@
 
 ## 🐣 About
 
-**ChickTech** is an AI-powered chicken disease diagnosis platform that leverages **deep learning** to identify poultry diseases such as *Coccidiosis* from uploaded images.  
-It combines a powerful **Flask backend** for AI inference and a **Next.js frontend** for an interactive, cinematic user experience.
+**ChickTech** is an AI-powered chicken disease diagnosis platform that leverages **deep learning** to identify poultry diseases. It combines a powerful **Flask backend** for AI inference and a **Next.js frontend** for an interactive, cinematic user experience.
 
 The platform provides:
-- Real-time disease detection using trained CNN models  
-- Confidence-based predictions and visualization  
-- Suggested cures and preventive measures  
-- Cloud-ready deployment pipelines (AWS / Azure)  
+- **Real-time Disease Detection:** Using trained CNN models for Coccidiosis and External Lesions.
+- **External Lesion Detection:** New module for identifying **Fowlpox** and **Bumblefoot** with high accuracy.
+- **Cinematic UI:** Interactive fluid simulation (Splash Cursor) and smooth GSAP animations.
+- **Comprehensive Recovery Guides:** Dynamic, doctor-level treatment and prevention protocols for each detected disease.
+- **Cloud-Ready:** Scalable architecture ready for deployment on Render, AWS, or Azure.
 
-This project demonstrates the integration of **AI, modern web frameworks, and DevOps** for solving agricultural and veterinary challenges with automation and precision.
 ---
 
 ## 🚀 Tech Stack
 
 | Layer | Technologies Used |
 |-------|--------------------|
-| **Frontend** | Next.js 14, TypeScript, Tailwind CSS, GSAP Animations |
-| **Backend / API** | Flask (Python), REST API |
-| **Machine Learning** | TensorFlow / Keras, OpenCV, DVC Pipelines |
-| **Database / Storage** | AWS S3, Azure Container Registry |
-| **CI/CD** | GitHub Actions, Docker, AWS EC2 / Azure Web App |
-| **Version Control** | Git, Git LFS (for large models) |
+| **Frontend** | Next.js 14, TypeScript, Tailwind CSS, GSAP, OGL (WebGL) |
+| **Backend / API** | Flask (Python), TensorFlow 2.x, Scikit-learn |
+| **Machine Learning** | MobileNetV2 (Transfer Learning), OpenCV |
+| **Database / Auth** | Firebase (Firestore & Authentication) |
+| **Deployment** | Render (Backend), Vercel (Frontend), Docker |
 
 ---
 
 ## 🧠 Core Features
 
-✅ AI-based chicken disease classification from image uploads  
-✅ Confidence-level visualization with smooth animations  
-✅ Cure & prevention recommendation system  
-✅ Secure `.env` and `.gitignore` handling  
-✅ Integrated with Git LFS for large ML models  
-✅ AWS & Azure ready deployment pipelines  
+✅ **Dual Diagnosis Modes:** Choose between Coccidiosis (Fecal) and External Lesion (Skin/Foot) detection.  
+✅ **Splash Cursor Effect:** Premium WebGL fluid simulation that follows the user's cursor.  
+✅ **Dynamic Treatment Guides:** Real-time recovery and prevention steps tailored to the selected disease.  
+✅ **High Accuracy Models:** Trained on curated poultry datasets with 98%+ accuracy for the external lesion module.  
+✅ **Prediction History:** Securely save and view past diagnosis results using Firebase.  
 
 ---
 
 ## 🗂️ Project Structure
 ```
-Chicken-Disease-Classification-Projects/
+ChickTech-AI-Diagnosis/
 │
-├── frontend/ # Next.js app (UI)
-│ ├── app/
-│ ├── components/
-│ ├── public/
-│ ├── package.json
+├── frontend/                # Next.js app (UI)
+│   ├── app/                 # Routes and Layouts
+│   ├── components/          # React Components
+│   │   ├── reactbits/       # Premium UI components (SplashCursor, etc.)
+│   │   └── ui/              # Base UI components
+│   └── public/              # Static assets
 │
-├── src/ # Core ML & pipeline source
-│ ├── components/
-│ ├── config/
-│ ├── entity/
-│ ├── pipeline/
-│ └── utils/
+├── backend/                 # Flask Backend
+│   ├── models/              # Trained .h5 models and metrics
+│   ├── app.py               # API Entry Point
+│   ├── predict.py           # Generic Predictor Class
+│   └── train_external_lesion.py # Training script for new model
 │
-├── artifacts/ # Model artifacts (.h5, .keras)
-├── static/ # Static assets
-├── templates/ # Flask templates
-├── config/ # YAML configuration files
-├── logs/ # Training & runtime logs
-│
-├── app.py # Flask app entry point
-├── main.py # ML pipeline entry
-├── requirements.txt # Python dependencies
-├── Dockerfile # Container setup
-├── dvc.yaml # DVC workflow definition
-└── README.md # You are here
+├── datasets/                # Training data (ignored)
+├── requirements.txt         # Python dependencies
+├── Dockerfile               # Container setup
+└── README.md                # You are here
 ```
-
 
 ---
 
@@ -79,89 +67,33 @@ Chicken-Disease-Classification-Projects/
 git clone https://github.com/KunalBishwal/ChickTech-AI-Diagnosis.git
 cd ChickTech-AI-Diagnosis
 ```
-### Backend Setup (Flask + ML)
+
+### 🐍 Backend Setup (Flask)
 ```bash
-conda create -n cnncls python=3.8 -y
-conda activate cnncls
+# Recommended: Create a virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 pip install -r requirements.txt
-python app.py
-http://127.0.0.1:5000/
+python backend/app.py
 ```
 
-### Frontend Setup (Next.js)
+### ⚛️ Frontend Setup (Next.js)
 ```bash
-Navigate to frontend folder:
-
 cd frontend
 npm install
 npm run dev
-
-Then open:
-http://localhost:3000
-```
-### DVC Commands (for ML Pipelines)
-```
-dvc init
-dvc repro
-dvc dag
 ```
 
-### 🧑‍💻 Developer Workflow
-```bash
-Edit YAML configs → config.yaml, params.yaml
+---
 
-Update entities → /src/entity/
+## 🔐 Security & Environment
+- **`.env` Handling:** All API keys and environment variables are managed via `.env` files (ignored in Git).
+- **Git LFS:** Used for tracking large model files (`.h5`).
+- **Data Protection:** `minor_project.txt` and other sensitive notes are excluded via `.gitignore`.
 
-Modify components → /src/components/
+---
 
-Update pipelines → /src/pipeline/
-
-Test with → python main.py
-
-Track model changes → dvc repro
-```
-
-### 🔐 Security & Best Practices
-```bash
-Environment variables stored in .env.local and ignored in .gitignore
-
-Sensitive keys (Google API, Azure Registry) are not committed
-
-Git LFS handles large files like .h5, .keras, and .mp4
-
-DVC ensures reproducibility for ML pipelines
-```
-
-### Recommended .gitignore
-```bash
-# Environment files
-.env
-.env.local
-.env.production
-.env.development
-
-# Python
-__pycache__/
-*.pyc
-venv/
-logs/
-
-# Node / Next.js
-node_modules/
-.next/
-
-# ML artifacts
-artifacts/
-*.h5
-*.keras
-*.mp4
-research/
-static/
-
-# OS / misc
-.DS_Store
-*.log
-```
 ## 🧑‍🏫 Author
 
 **Kunal Bishwal**  
