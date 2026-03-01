@@ -253,7 +253,7 @@ export default function HeroSection() {
           </video>
         ) : (
           <img
-            src="/cock-farm-village-chicken.jpg"
+            src="/chicken_farm_static.jpeg"
             alt="Chicken Farm Background"
             className="w-full h-full object-cover brightness-[0.9]"
           />
