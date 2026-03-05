@@ -14,11 +14,13 @@ import {
   Wrench,
 } from "lucide-react";
 import LiquidEther from "@/components/reactbits/liquid-ether";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function FeaturesSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -112,14 +114,13 @@ export default function FeaturesSection() {
       {/* Header */}
       <div className="text-center mb-24 px-6 relative z-10">
         <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
-          Project{" "}
+          {t("Project")}{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">
-            Highlights
+            {t("Highlights")}
           </span>
         </h2>
         <p className="text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto leading-relaxed">
-          A cinematic walkthrough of our student-built AI system — blending
-          technology, learning, and design. Scroll to explore the journey. ✨
+          {t("A cinematic walkthrough of our student-built AI system — blending technology, learning, and design. Scroll to explore the journey. ✨")}
         </p>
       </div>
 
@@ -185,10 +186,10 @@ export default function FeaturesSection() {
                 {feature.icon}
               </div>
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                {feature.title}
+                {t(feature.title)}
               </h3>
               <p className="text-gray-700 dark:text-gray-300 text-base leading-relaxed">
-                {feature.desc}
+                {t(feature.desc)}
               </p>
             </div>
           </div>
@@ -213,12 +214,10 @@ export default function FeaturesSection() {
         >
           <div className="relative z-10">
             <h3 className="text-4xl md:text-5xl font-bold mb-6">
-              🚀 Project in Development
+              🚀 {t("Project in Development")}
             </h3>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-              This AI project is being built by students passionate about
-              Machine Learning and UI Design. The next step — making it
-              production-ready.
+              {t("This AI project is being built by students passionate about Machine Learning and UI Design. The next step — making it production-ready.")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -231,7 +230,7 @@ export default function FeaturesSection() {
                   )
                 }
               >
-                View on GitHub
+                {t("View on GitHub")}
               </Button>
               <Button
                 variant="outline"
@@ -241,7 +240,7 @@ export default function FeaturesSection() {
                   window.open("https://linkedin.com/in/KunalBishwal", "_blank")
                 }
               >
-                Connect on LinkedIn
+                {t("Connect on LinkedIn")}
               </Button>
             </div>
           </div>

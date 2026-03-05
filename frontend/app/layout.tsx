@@ -6,6 +6,7 @@ import { AuthProvider } from "@/components/auth-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import SplashCursor from "@/components/reactbits/splash-cursor";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,10 +39,12 @@ export default function RootLayout({
           disableTransitionOnChange={false}
         >
           <AuthProvider>
-            <SplashCursor />
-            {children}
-            <Analytics />
-            <Toaster position="top-center" richColors expand />
+            <LanguageProvider>
+              <SplashCursor />
+              {children}
+              <Analytics />
+              <Toaster position="top-center" richColors expand />
+            </LanguageProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

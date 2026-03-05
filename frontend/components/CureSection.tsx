@@ -22,6 +22,8 @@ import {
     Apple,
 } from "lucide-react";
 import LiquidEther from "@/components/reactbits/liquid-ether";
+import { useLanguage } from "@/context/LanguageContext";
+import TTSButton from "@/components/TTSButton";
 
 type DiseaseTab = "coccidiosis" | "external-lesion";
 
@@ -311,6 +313,17 @@ export default function CureSection() {
     const sectionRef = useRef<HTMLElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const [activeTab, setActiveTab] = useState<DiseaseTab>("coccidiosis");
+    // Use the global language context — no per-component translation state
+    const { t, tBatch, lang } = useLanguage();
+
+    // Pre-warm translation cache whenever tab or language changes
+    useEffect(() => {
+        if (lang === "en-IN") return;
+        const allSteps = [...coccidiosisSteps, ...fowlpoxSteps, ...bumblefootSteps];
+        const allTexts: string[] = [];
+        allSteps.forEach((s) => { allTexts.push(s.title, s.description, ...s.details); });
+        tBatch(allTexts);
+    }, [lang, tBatch]);
 
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
@@ -342,8 +355,8 @@ export default function CureSection() {
 
     const subtitleText =
         activeTab === "coccidiosis"
-            ? "Coccidiosis is common but treatable. Follow these expert-recommended steps to restore your flock's health and prevent recurrence."
-            : "Fowlpox and Bumblefoot require different treatment approaches. Follow these veterinary-level protocols for each condition.";
+            ? t("Coccidiosis is common but treatable. Follow these expert-recommended steps to restore your flock's health and prevent recurrence.")
+            : t("Fowlpox and Bumblefoot require different treatment approaches. Follow these veterinary-level protocols for each condition.");
 
     return (
         <section
@@ -367,9 +380,9 @@ export default function CureSection() {
                         <HeartPulse className="w-10 h-10 text-white" />
                     </div>
                     <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
-                        Recovery &{" "}
+                        {t("Recovery")} &{" "}
                         <span className="bg-linear-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-                            Prevention
+                            {t("Prevention")}
                         </span>
                     </h2>
                     <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
@@ -377,28 +390,28 @@ export default function CureSection() {
                     </p>
                 </div>
 
-                {/* Disease Tab Selector */}
+                {/* Disease Tab Selector — language selector is now in the Navigation bar */}
                 <div className="flex justify-center mb-16">
                     <div className="inline-flex gap-3 p-2 bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
                         <button
                             onClick={() => setActiveTab("coccidiosis")}
                             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${activeTab === "coccidiosis"
-                                    ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg shadow-blue-500/25 scale-105"
-                                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                                ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg shadow-blue-500/25 scale-105"
+                                : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50"
                                 }`}
                         >
                             <Bug className="w-4 h-4" />
-                            Coccidiosis
+                            {t("Coccidiosis")}
                         </button>
                         <button
                             onClick={() => setActiveTab("external-lesion")}
                             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${activeTab === "external-lesion"
-                                    ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/25 scale-105"
-                                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                                ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/25 scale-105"
+                                : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50"
                                 }`}
                         >
                             <Stethoscope className="w-4 h-4" />
-                            Bumblefoot & Fowlpox
+                            {t("Bumblefoot & Fowlpox")}
                         </button>
                     </div>
                 </div>
@@ -407,11 +420,10 @@ export default function CureSection() {
                 {activeTab === "external-lesion" && (
                     <div className="text-center mb-10">
                         <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                            🐔 Fowlpox Treatment Protocol
+                            🐔 {t("Fowlpox Treatment Protocol")}
                         </h3>
                         <p className="text-gray-500 dark:text-gray-400 text-sm">
-                            Fowlpox is a viral infection — no antiviral cure exists, but
-                            supportive care and prevention are highly effective.
+                            {t("Fowlpox is a viral infection — no antiviral cure exists, but supportive care and prevention are highly effective.")}
                         </p>
                     </div>
                 )}
@@ -430,10 +442,10 @@ export default function CureSection() {
                                 <div className="flex items-start justify-between mb-4">
                                     <div
                                         className={`p-2.5 rounded-xl ${step.severity === "critical"
-                                                ? "bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400"
-                                                : step.severity === "important"
-                                                    ? "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400"
-                                                    : "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400"
+                                            ? "bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400"
+                                            : step.severity === "important"
+                                                ? "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400"
+                                                : "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400"
                                             }`}
                                     >
                                         {step.icon}
@@ -444,11 +456,14 @@ export default function CureSection() {
                                         {step.severity}
                                     </span>
                                 </div>
-                                <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">
-                                    {step.title}
-                                </h3>
+                                <div className="flex items-start justify-between gap-2 mb-2">
+                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                                        {t(step.title)}
+                                    </h3>
+                                    <TTSButton text={t(step.title)} />
+                                </div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                    {step.description}
+                                    {t(step.description)}
                                 </p>
                                 <ul className="space-y-2">
                                     {step.details.map((detail, i) => (
@@ -457,7 +472,7 @@ export default function CureSection() {
                                             className="flex items-start gap-2 text-xs text-gray-700 dark:text-gray-300"
                                         >
                                             <span className="mt-1 w-1.5 h-1.5 bg-current rounded-full shrink-0 opacity-50" />
-                                            {detail}
+                                            {t(detail)}
                                         </li>
                                     ))}
                                 </ul>
@@ -471,11 +486,10 @@ export default function CureSection() {
                     <>
                         <div className="text-center mt-20 mb-10">
                             <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                                🦶 Bumblefoot Treatment Protocol
+                                🦶 {t("Bumblefoot Treatment Protocol")}
                             </h3>
                             <p className="text-gray-500 dark:text-gray-400 text-sm">
-                                Bumblefoot (pododermatitis) is a bacterial foot infection caused
-                                by Staphylococcus. Early treatment prevents joint/bone damage.
+                                {t("Bumblefoot (pododermatitis) is a bacterial foot infection caused by Staphylococcus. Early treatment prevents joint/bone damage.")}
                             </p>
                         </div>
 
@@ -490,10 +504,10 @@ export default function CureSection() {
                                         <div className="flex items-start justify-between mb-4">
                                             <div
                                                 className={`p-2.5 rounded-xl ${step.severity === "critical"
-                                                        ? "bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400"
-                                                        : step.severity === "important"
-                                                            ? "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400"
-                                                            : "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400"
+                                                    ? "bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400"
+                                                    : step.severity === "important"
+                                                        ? "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400"
+                                                        : "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400"
                                                     }`}
                                             >
                                                 {step.icon}
@@ -504,11 +518,14 @@ export default function CureSection() {
                                                 {step.severity}
                                             </span>
                                         </div>
-                                        <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">
-                                            {step.title}
-                                        </h3>
+                                        <div className="flex items-start justify-between gap-2 mb-2">
+                                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                                                {t(step.title)}
+                                            </h3>
+                                            <TTSButton text={t(step.title)} />
+                                        </div>
                                         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                            {step.description}
+                                            {t(step.description)}
                                         </p>
                                         <ul className="space-y-2">
                                             {step.details.map((detail, i) => (
@@ -517,7 +534,7 @@ export default function CureSection() {
                                                     className="flex items-start gap-2 text-xs text-gray-700 dark:text-gray-300"
                                                 >
                                                     <span className="mt-1 w-1.5 h-1.5 bg-current rounded-full shrink-0 opacity-50" />
-                                                    {detail}
+                                                    {t(detail)}
                                                 </li>
                                             ))}
                                         </ul>
@@ -532,10 +549,7 @@ export default function CureSection() {
                 <div className="mt-16 max-w-3xl mx-auto text-center">
                     <div className="p-5 bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/30 rounded-2xl">
                         <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
-                            ⚠️ <strong>Veterinary Disclaimer:</strong> This guide is for
-                            educational purposes. Always consult a qualified poultry veterinarian
-                            for proper diagnosis, dosing, and treatment. Dosages may vary based on
-                            breed, age, weight, and severity of infection.
+                            ⚠️ <strong>{t("Veterinary Disclaimer:")} </strong>{t("This guide is for educational purposes. Always consult a qualified poultry veterinarian for proper diagnosis, dosing, and treatment. Dosages may vary based on breed, age, weight, and severity of infection.")}
                         </p>
                     </div>
                 </div>
@@ -550,7 +564,7 @@ export default function CureSection() {
                         }
                         className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-10 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 rounded-xl"
                     >
-                        🩺 AI Diagnosis Tool
+                        🩺 {t("AI Diagnosis Tool")}
                     </button>
                 </div>
             </div>

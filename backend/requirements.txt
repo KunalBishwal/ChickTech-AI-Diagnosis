@@ -13,4 +13,7 @@ Flask
 Flask-Cors
 scipy
 scikit-learn
+python-dotenv
+requests
+cachetools
 # -e .

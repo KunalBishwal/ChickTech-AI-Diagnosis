@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import { Play, ArrowDown, X } from "lucide-react";
 import ScrollFloat from "@/components/reactbits/scroll-float";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function HeroSection() {
   const heroRef = useRef<HTMLElement>(null);
@@ -22,6 +23,7 @@ export default function HeroSection() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [videoError, setVideoError] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -302,11 +304,10 @@ export default function HeroSection() {
           ref={subtitleRef}
           className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto font-medium text-white/90"
         >
-          AI-powered chicken health diagnosis helping farmers detect diseases
-          instantly.
+          AI-{t("powered chicken health diagnosis helping farmers detect diseases instantly.")}
           <br />
           <span className="text-yellow-300">
-            Because every chicken deserves the best care.
+            {t("Because every chicken deserves the best care.")}
           </span>
         </p>
 
@@ -328,7 +329,7 @@ export default function HeroSection() {
                 ?.scrollIntoView({ behavior: "smooth" })
             }
           >
-            <span className="relative z-10">Try Diagnosis Tool</span>
+            <span className="relative z-10">{t("Try Diagnosis Tool")}</span>
 
             {/* ✨ Animated gradient sheen */}
             <span
@@ -354,7 +355,7 @@ export default function HeroSection() {
           <ArrowDown className="w-4 h-4 text-white mt-2 animate-bounce" />
         </div>
         <p className="text-white/80 text-sm group-hover:text-white font-medium">
-          Scroll to explore
+          {t("Scroll to explore")}
         </p>
       </div>
       {/* 🎬 Modern Video Modal */}

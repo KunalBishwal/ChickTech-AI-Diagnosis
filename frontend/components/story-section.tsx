@@ -8,6 +8,7 @@ import { LineChart, Line, ResponsiveContainer, Tooltip } from "recharts";
 import ScrollReveal from "@/components/reactbits/scroll-reveal";
 import ScrollFloat from "@/components/reactbits/scroll-float";
 import LiquidEther from "@/components/reactbits/liquid-ether";
+import { useLanguage } from "@/context/LanguageContext";
 
 type TrendData = {
   time: string;
@@ -23,6 +24,7 @@ export default function StorySection() {
   const solutionRef = useRef<HTMLDivElement>(null);
 
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
   const [stats, setStats] = useState<{
     globalLosses: number;
     avgDelay: number;
@@ -120,11 +122,10 @@ export default function StorySection() {
               <AlertTriangle className="w-10 h-10 text-red-600" />
             </div>
             <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
-              The <span className="text-red-600 dark:text-red-400">Crisis</span>
+              {t("The")} <span className="text-red-600 dark:text-red-400">{t("Crisis")}</span>
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto">
-              Every year, chicken diseases devastate farms worldwide. Traditional diagnosis methods are too slow,
-              too expensive, and often too late to save entire flocks.
+              {t("Every year, chicken diseases devastate farms worldwide. Traditional diagnosis methods are too slow, too expensive, and often too late to save entire flocks.")}
             </p>
           </div>
         </ScrollReveal>
@@ -172,8 +173,8 @@ export default function StorySection() {
                 <div className="stat-number text-5xl font-extrabold text-red-600 mb-2">
                   {loading ? "..." : item.value}
                 </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">{item.label}</div>
-                <p className="text-gray-700 dark:text-gray-300 font-medium mb-4">{item.desc}</p>
+                <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">{t(item.label)}</div>
+                <p className="text-gray-700 dark:text-gray-300 font-medium mb-4">{t(item.desc)}</p>
 
                 {/* 📈 Mini Sparkline */}
                 {!loading && stats.trends?.length > 0 && (
@@ -224,11 +225,10 @@ export default function StorySection() {
                 <Zap className="w-10 h-10 text-green-600" />
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
-                The <span className="text-green-600 dark:text-green-400">Hero</span>
+                {t("The")} <span className="text-green-600 dark:text-green-400">{t("Hero")}</span>
               </h2>
               <p className="text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto leading-relaxed">
-                ChickTech arrives as the AI-powered solution that transforms chicken health diagnosis. Fast, accurate,
-                and accessible to every farmer worldwide.
+                {t("ChickTech arrives as the AI-powered solution that transforms chicken health diagnosis. Fast, accurate, and accessible to every farmer worldwide.")}
               </p>
             </div>
           </ScrollReveal>
@@ -242,9 +242,9 @@ export default function StorySection() {
                       <span className="text-3xl">⚡</span>
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Lightning Fast</h3>
+                      <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">{t("Lightning Fast")}</h3>
                       <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                        Upload a photo and get results in under 10 seconds. No more waiting days for lab results.
+                        {t("Upload a photo and get results in under 10 seconds. No more waiting days for lab results.")}
                       </p>
                     </div>
                   </div>
@@ -256,9 +256,9 @@ export default function StorySection() {
                       <span className="text-3xl">🎯</span>
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Pinpoint Accuracy</h3>
+                      <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">{t("Pinpoint Accuracy")}</h3>
                       <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                        98.2% accuracy rate, trained on millions of chicken health images from around the world.
+                        {t("98.2% accuracy rate, trained on millions of chicken health images from around the world.")}
                       </p>
                     </div>
                   </div>
@@ -270,9 +270,9 @@ export default function StorySection() {
                       <Heart className="w-8 h-8 text-green-600" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Save Lives</h3>
+                      <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">{t("Save Lives")}</h3>
                       <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                        Early detection means better treatment outcomes and healthier flocks.
+                        {t("Early detection means better treatment outcomes and healthier flocks.")}
                       </p>
                     </div>
                   </div>

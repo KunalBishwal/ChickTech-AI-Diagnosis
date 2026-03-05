@@ -10,6 +10,8 @@ import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useTheme } from "next-themes";
+import LanguageSelector from "@/components/LanguageSelector";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Navigation() {
   const navRef = useRef<HTMLElement>(null);
@@ -21,6 +23,7 @@ export default function Navigation() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const { theme, setTheme } = useTheme();
+  const { lang, setLang, isTranslating } = useLanguage();
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -137,6 +140,13 @@ export default function Navigation() {
                 {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
             )}
+
+            {/* 🌐 Global Language Selector */}
+            <LanguageSelector
+              selectedLanguage={lang}
+              onLanguageChange={setLang}
+              isTranslating={isTranslating}
+            />
 
             {/* Auth Buttons */}
             {!user ? (
@@ -258,6 +268,15 @@ export default function Navigation() {
                   {label}
                 </button>
               ))}
+
+              {/* Mobile Language Selector */}
+              <div className="pt-2">
+                <LanguageSelector
+                  selectedLanguage={lang}
+                  onLanguageChange={(l) => { setLang(l); setIsMobileMenuOpen(false); }}
+                  isTranslating={isTranslating}
+                />
+              </div>
 
               {!user ? (
                 <Button

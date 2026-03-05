@@ -1,6 +1,7 @@
 commands.txt
 read.txt
 minor_project.txt
+notes.txt
 # Secrets
 .env
 *.key
@@ -52,6 +53,14 @@ logs/
 *.keras
 *.mp3
 *.zip
+*.pt
+
+# Datasets
+backend/Coccidiosis/
+backend/Poultry Disease Detection.v9i.folder/
+
+# Other
+backend/inputImage.jpg
 
 # Artifacts / Checkpoints
 artifacts/

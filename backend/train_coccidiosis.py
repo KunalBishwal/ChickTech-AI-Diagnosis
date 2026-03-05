@@ -1,36 +1,42 @@
 """
-External Lesion Detection — Training Script (v2 — Improved)
-MobileNetV2 transfer learning for Fowlpox / Bumblefoot / Healthy classification.
+Coccidiosis Detection — Standalone Retraining Script (v2)
+VGG16 transfer learning for Coccidiosis / Healthy classification.
 
-Key improvements over v1:
-  - Much stronger augmentation for minority-class generalization
-  - Two-phase fine-tuning: frozen → partial unfreeze → deep unfreeze
-  - MixUp-style label smoothing via `label_smoothing`
-  - More aggressive learning rate schedule
-  - Larger classification head with BatchNormalization
+SAFETY: Backs up the existing model before overwriting.
+        If the new model performs worse, the backup is preserved.
+
+Key improvements over the original DVC pipeline:
+  - Standalone script (no config.yaml / params.yaml dependency)
+  - Proper classification head: GlobalAveragePooling2D + BatchNorm + Dropout
+  - 3-phase progressive unfreezing
+  - Heavy data augmentation for real-world generalization
+  - Label smoothing to prevent overconfident predictions
+  - EarlyStopping + ReduceLROnPlateau callbacks
+  - Class weights for any imbalance
+  - Automatic model backup before overwriting
 
 Usage:
     cd backend
-    python train_external_lesion.py
+    python train_coccidiosis.py
 
 Dataset expected at:
-    backend/Poultry Disease Detection.v9i.folder/
-        train/  (Bumblefoot/, Fowlpox/, Healthy/)
-        valid/  (Bumblefoot/, Fowlpox/, Healthy/)
-        test/   (Bumblefoot/, Fowlpox/, Healthy/)
+    backend/Coccidiosis/
+        cocci/    (coccidiosis images)
+        healthy/  (healthy images)
 
 Output:
-    models/external_lesion_model.h5
-    models/external_lesion_metrics.json
-    models/external_lesion_confusion_matrix.png
+    artifacts/training/model.h5          (replaces existing model)
+    models/coccidiosis_metrics.json      (per-class metrics)
+    models/coccidiosis_confusion_matrix.png
 """
 
 import os
 import json
+import shutil
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.applications import VGG16
 from tensorflow.keras.layers import (
     GlobalAveragePooling2D, Dense, Dropout, BatchNormalization
 )
@@ -39,83 +45,90 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import (
     EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 )
-from sklearn.metrics import (
-    classification_report, confusion_matrix
-)
+from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.utils.class_weight import compute_class_weight
 
 # ─── Config ───────────────────────────────────────────────
 IMG_SIZE        = (224, 224)
-BATCH_SIZE      = 16          # Smaller batch = more gradient updates per epoch
-EPOCHS_PHASE1   = 20          # Frozen backbone
-EPOCHS_PHASE2   = 25          # Fine-tune top layers
-EPOCHS_PHASE3   = 15          # Deep fine-tune (last 50 layers)
+BATCH_SIZE      = 16
+EPOCHS_PHASE1   = 20       # Frozen backbone
+EPOCHS_PHASE2   = 25       # Fine-tune top 4 conv blocks
+EPOCHS_PHASE3   = 15       # Deep fine-tune
 LEARNING_RATE   = 1e-4
-CLASS_NAMES     = ["Bumblefoot", "Fowlpox", "Healthy"]
-DATASET_ROOT    = os.path.join(
-    os.path.dirname(__file__),
-    "Poultry Disease Detection.v9i.folder"
-)
+CLASS_NAMES     = ["Coccidiosis", "Healthy"]   # alphabetical = flow_from_directory order
+# Note: flow_from_directory sorts folders alphabetically:
+#   cocci -> index 0 (Coccidiosis)
+#   healthy -> index 1 (Healthy)
+DATASET_ROOT    = os.path.join(os.path.dirname(__file__), "Coccidiosis")
 OUTPUT_DIR      = os.path.join(os.path.dirname(__file__), "models")
-MODEL_PATH      = os.path.join(OUTPUT_DIR, "external_lesion_model.h5")
+ARTIFACTS_DIR   = os.path.join(os.path.dirname(__file__), "artifacts", "training")
+MODEL_PATH      = os.path.join(ARTIFACTS_DIR, "model.h5")
+BACKUP_PATH     = os.path.join(ARTIFACTS_DIR, "model.h5.backup")
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+os.makedirs(ARTIFACTS_DIR, exist_ok=True)
 
 
 # ─── Data Generators ─────────────────────────────────────
 def create_generators():
-    """Create train/valid/test generators with HEAVY augmentation."""
-
-    # Significantly stronger augmentation to improve generalization
+    """
+    Create train/val generators with heavy augmentation.
+    Uses 85/15 split from a single directory.
+    """
     train_datagen = ImageDataGenerator(
         rescale=1.0 / 255,
-        rotation_range=40,             # was 20 → more rotation = more views
-        width_shift_range=0.2,         # was 0.1
-        height_shift_range=0.2,        # was 0.1
-        shear_range=0.15,              # NEW: perspective variation
-        zoom_range=0.25,               # was 0.1
-        brightness_range=[0.7, 1.3],   # was [0.8, 1.2]
-        channel_shift_range=30,        # NEW: color variation (critical for lesions)
+        validation_split=0.15,
+        rotation_range=40,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.2,
+        zoom_range=0.25,
+        brightness_range=[0.7, 1.3],
+        channel_shift_range=25,
         horizontal_flip=True,
-        vertical_flip=True,            # NEW: adds more variation
-        fill_mode="reflect",           # better than default nearest
+        vertical_flip=True,
+        fill_mode="reflect",
     )
 
-    eval_datagen = ImageDataGenerator(rescale=1.0 / 255)
+    eval_datagen = ImageDataGenerator(
+        rescale=1.0 / 255,
+        validation_split=0.15,
+    )
 
     common_kwargs = dict(
         target_size=IMG_SIZE,
         batch_size=BATCH_SIZE,
         class_mode="categorical",
-        classes=CLASS_NAMES,
         interpolation="bilinear",
     )
 
     train_gen = train_datagen.flow_from_directory(
-        os.path.join(DATASET_ROOT, "train"),
+        DATASET_ROOT,
+        subset="training",
         shuffle=True,
         **common_kwargs,
     )
 
-    valid_gen = eval_datagen.flow_from_directory(
-        os.path.join(DATASET_ROOT, "valid"),
+    val_gen = eval_datagen.flow_from_directory(
+        DATASET_ROOT,
+        subset="validation",
         shuffle=False,
         **common_kwargs,
     )
 
-    test_gen = eval_datagen.flow_from_directory(
-        os.path.join(DATASET_ROOT, "test"),
-        shuffle=False,
-        **common_kwargs,
-    )
+    # Print discovered class mapping
+    print(f"   Class indices: {train_gen.class_indices}")
 
-    return train_gen, valid_gen, test_gen
+    return train_gen, val_gen
 
 
 # ─── Model ────────────────────────────────────────────────
 def build_model():
-    """MobileNetV2 + improved classification head with BatchNorm."""
-    base = MobileNetV2(
+    """
+    VGG16 + improved classification head.
+    Replaces Flatten() with GlobalAveragePooling2D (100x fewer params).
+    """
+    base = VGG16(
         input_shape=(*IMG_SIZE, 3),
         include_top=False,
         weights="imagenet",
@@ -123,11 +136,12 @@ def build_model():
     base.trainable = False   # freeze backbone first
 
     x = base.output
-    x = GlobalAveragePooling2D()(x)
-    x = Dense(256, activation="relu")(x)       # was 128 → bigger head
-    x = BatchNormalization()(x)                 # NEW: stabilizes training
-    x = Dropout(0.4)(x)                         # was 0.3 → stronger regularization
-    x = Dense(128, activation="relu")(x)        # NEW: second FC layer
+    x = GlobalAveragePooling2D()(x)        # instead of Flatten (huge overfitting reduction)
+    x = Dense(256, activation="relu")(x)
+    x = BatchNormalization()(x)
+    x = Dropout(0.4)(x)
+    x = Dense(128, activation="relu")(x)
+    x = BatchNormalization()(x)
     x = Dropout(0.3)(x)
     out = Dense(len(CLASS_NAMES), activation="softmax")(x)
 
@@ -143,7 +157,7 @@ def build_model():
 
 # ─── Class Weights ────────────────────────────────────────
 def get_class_weights(generator):
-    """Compute class weights to handle imbalance."""
+    """Compute balanced class weights."""
     labels = generator.classes
     weights = compute_class_weight(
         class_weight="balanced",
@@ -151,57 +165,57 @@ def get_class_weights(generator):
         y=labels,
     )
     cw = dict(enumerate(weights))
-
-    # Give even more weight to Fowlpox (most confused class)
-    fowlpox_idx = CLASS_NAMES.index("Fowlpox")
-    cw[fowlpox_idx] *= 1.3  # extra penalty for Fowlpox misclassifications
-    print(f"   Boosted class weights: {cw}")
+    print(f"   Class weights: {cw}")
     return cw
 
 
 # ─── Unfreeze Utility ────────────────────────────────────
 def unfreeze_layers(model, num_layers):
-    """Unfreeze the last `num_layers` of the MobileNetV2 backbone."""
+    """Unfreeze the last `num_layers` of the VGG16 backbone."""
     base_model = None
     for layer in model.layers:
         if hasattr(layer, 'layers') and len(layer.layers) > 10:
             base_model = layer
             break
 
-    if base_model is not None:
-        for layer in base_model.layers[-num_layers:]:
-            if not isinstance(layer, tf.keras.layers.BatchNormalization):
-                layer.trainable = True
-    else:
-        for layer in model.layers[-num_layers:]:
-            if not isinstance(layer, tf.keras.layers.BatchNormalization):
-                layer.trainable = True
+    target = base_model if base_model is not None else model
+
+    unfrozen = 0
+    for layer in target.layers[-num_layers:]:
+        if not isinstance(layer, tf.keras.layers.BatchNormalization):
+            layer.trainable = True
+            unfrozen += 1
+    print(f"   Unfroze {unfrozen} layers (skipped BatchNorm)")
 
 
 # ─── Evaluation ───────────────────────────────────────────
-def evaluate_model(model, test_gen):
+def evaluate_model(model, val_gen):
     """Generate confusion matrix, precision, recall, F1."""
-    print("\n[EVAL] Evaluating on test set...")
+    print("\n[EVAL] Evaluating on validation set...")
 
-    test_gen.reset()
-    y_pred_probs = model.predict(test_gen, steps=len(test_gen))
+    val_gen.reset()
+    y_pred_probs = model.predict(val_gen, steps=len(val_gen))
     y_pred = np.argmax(y_pred_probs, axis=1)
-    y_true = test_gen.classes[:len(y_pred)]
+    y_true = val_gen.classes[:len(y_pred)]
 
-    # Classification report
+    # Remap class indices to CLASS_NAMES correctly
+    idx_to_class = {v: k for k, v in val_gen.class_indices.items()}
+    # Map folder names to our CLASS_NAMES
+    folder_to_name = {"cocci": "Coccidiosis", "healthy": "Healthy"}
+    actual_class_names = [folder_to_name.get(idx_to_class[i], idx_to_class[i])
+                          for i in range(len(idx_to_class))]
+
     report = classification_report(
         y_true, y_pred,
-        target_names=CLASS_NAMES,
+        target_names=actual_class_names,
         output_dict=True,
     )
-    print("\n" + classification_report(y_true, y_pred, target_names=CLASS_NAMES))
+    print("\n" + classification_report(y_true, y_pred, target_names=actual_class_names))
 
-    # Confusion matrix
     cm = confusion_matrix(y_true, y_pred)
     print("Confusion Matrix:")
     print(cm)
 
-    # Save metrics JSON
     metrics = {
         "accuracy": float(report["accuracy"]),
         "per_class": {
@@ -211,11 +225,11 @@ def evaluate_model(model, test_gen):
                 "f1-score": round(report[name]["f1-score"], 4),
                 "support": int(report[name]["support"]),
             }
-            for name in CLASS_NAMES
+            for name in actual_class_names
         },
         "confusion_matrix": cm.tolist(),
     }
-    metrics_path = os.path.join(OUTPUT_DIR, "external_lesion_metrics.json")
+    metrics_path = os.path.join(OUTPUT_DIR, "coccidiosis_metrics.json")
     with open(metrics_path, "w") as f:
         json.dump(metrics, f, indent=2)
     print(f"[OK] Metrics saved to {metrics_path}")
@@ -230,47 +244,66 @@ def evaluate_model(model, test_gen):
         fig, ax = plt.subplots(figsize=(8, 6))
         sns.heatmap(
             cm, annot=True, fmt="d", cmap="Blues",
-            xticklabels=CLASS_NAMES, yticklabels=CLASS_NAMES, ax=ax
+            xticklabels=actual_class_names, yticklabels=actual_class_names, ax=ax
         )
         ax.set_xlabel("Predicted")
         ax.set_ylabel("True")
-        ax.set_title("External Lesion Detection — Confusion Matrix (v2)")
-        fig_path = os.path.join(OUTPUT_DIR, "external_lesion_confusion_matrix.png")
+        ax.set_title("Coccidiosis Detection — Confusion Matrix (v2)")
+        fig_path = os.path.join(OUTPUT_DIR, "coccidiosis_confusion_matrix.png")
         fig.savefig(fig_path, dpi=150, bbox_inches="tight")
         plt.close(fig)
         print(f"[OK] Confusion matrix plot saved to {fig_path}")
     except ImportError:
-        print("[WARN] matplotlib/seaborn not available -- skipping plot")
+        print("[WARN] matplotlib/seaborn not available — skipping plot")
 
     return metrics
 
 
+# ─── Backup Existing Model ───────────────────────────────
+def backup_existing_model():
+    """Create backup of existing model before overwriting."""
+    if os.path.isfile(MODEL_PATH):
+        print(f"[BACKUP] Backing up existing model to {BACKUP_PATH}")
+        shutil.copy2(MODEL_PATH, BACKUP_PATH)
+        print(f"[BACKUP] Backup created. If new model is worse, restore from: {BACKUP_PATH}")
+    else:
+        print("[BACKUP] No existing model found — skipping backup.")
+
+
 # ─── Main ─────────────────────────────────────────────────
 def main():
-    print("[TRAIN v2] External Lesion Detection — Improved Training Pipeline")
+    print("=" * 60)
+    print("[TRAIN v2] Coccidiosis Detection — Improved Retraining")
+    print("=" * 60)
     print(f"   Dataset:  {DATASET_ROOT}")
     print(f"   Output:   {MODEL_PATH}")
     print(f"   Classes:  {CLASS_NAMES}")
     print()
 
-    # 1. Create data generators
-    train_gen, valid_gen, test_gen = create_generators()
-    print(f"   Train samples: {train_gen.samples}")
-    print(f"   Valid samples: {valid_gen.samples}")
-    print(f"   Test samples:  {test_gen.samples}")
+    # 0. Safety backup
+    backup_existing_model()
 
-    # 2. Compute class weights (boosted for Fowlpox)
+    # 1. Create data generators
+    train_gen, val_gen = create_generators()
+    print(f"   Train samples: {train_gen.samples}")
+    print(f"   Val samples:   {val_gen.samples}")
+
+    # 2. Class weights
     class_weights = get_class_weights(train_gen)
 
     # 3. Build model
     model = build_model()
 
     # ────────── PHASE 1: Frozen backbone ──────────
-    print(f"\n[PHASE 1] Training classification head (backbone frozen) for {EPOCHS_PHASE1} epochs...")
+    print(f"\n{'='*60}")
+    print(f"[PHASE 1] Training classification head (backbone frozen)")
+    print(f"          Epochs: {EPOCHS_PHASE1}")
+    print(f"{'='*60}")
+
     model.fit(
         train_gen,
         epochs=EPOCHS_PHASE1,
-        validation_data=valid_gen,
+        validation_data=val_gen,
         class_weight=class_weights,
         callbacks=[
             EarlyStopping(
@@ -288,9 +321,13 @@ def main():
         ],
     )
 
-    # ────────── PHASE 2: Unfreeze top 30 layers ──────────
-    print(f"\n[PHASE 2] Fine-tuning top 30 layers for {EPOCHS_PHASE2} epochs...")
-    unfreeze_layers(model, 30)
+    # ────────── PHASE 2: Unfreeze last 8 layers (top 2 conv blocks of VGG16) ──────────
+    print(f"\n{'='*60}")
+    print(f"[PHASE 2] Fine-tuning top 2 conv blocks (last 8 layers)")
+    print(f"          Epochs: {EPOCHS_PHASE2}")
+    print(f"{'='*60}")
+
+    unfreeze_layers(model, 8)
     model.compile(
         optimizer=Adam(learning_rate=LEARNING_RATE / 10),
         loss=tf.keras.losses.CategoricalCrossentropy(label_smoothing=0.1),
@@ -300,7 +337,7 @@ def main():
     model.fit(
         train_gen,
         epochs=EPOCHS_PHASE2,
-        validation_data=valid_gen,
+        validation_data=val_gen,
         class_weight=class_weights,
         callbacks=[
             EarlyStopping(
@@ -318,11 +355,15 @@ def main():
         ],
     )
 
-    # ────────── PHASE 3: Deep fine-tune (last 50 layers) ──────────
-    print(f"\n[PHASE 3] Deep fine-tuning last 50 layers for {EPOCHS_PHASE3} epochs...")
-    unfreeze_layers(model, 50)
+    # ────────── PHASE 3: Deep fine-tune (last 14 layers = top 4 conv blocks) ──────────
+    print(f"\n{'='*60}")
+    print(f"[PHASE 3] Deep fine-tuning last 14 layers")
+    print(f"          Epochs: {EPOCHS_PHASE3}")
+    print(f"{'='*60}")
+
+    unfreeze_layers(model, 14)
     model.compile(
-        optimizer=Adam(learning_rate=LEARNING_RATE / 50),  # very low LR
+        optimizer=Adam(learning_rate=LEARNING_RATE / 50),
         loss=tf.keras.losses.CategoricalCrossentropy(label_smoothing=0.1),
         metrics=["accuracy"],
     )
@@ -330,7 +371,7 @@ def main():
     model.fit(
         train_gen,
         epochs=EPOCHS_PHASE3,
-        validation_data=valid_gen,
+        validation_data=val_gen,
         class_weight=class_weights,
         callbacks=[
             EarlyStopping(
@@ -344,18 +385,21 @@ def main():
         ],
     )
 
-    # 7. Save final model
+    # Save final model
     model.save(MODEL_PATH)
     print(f"\n[OK] Model saved to {MODEL_PATH}")
 
-    # 8. Evaluate
-    metrics = evaluate_model(model, test_gen)
+    # Evaluate
+    metrics = evaluate_model(model, val_gen)
 
-    print("\n[DONE] Training v2 complete!")
+    print(f"\n{'='*60}")
+    print(f"[DONE] Coccidiosis v2 Training Complete!")
     print(f"       Overall Accuracy: {metrics['accuracy']:.4f}")
-    for name in CLASS_NAMES:
-        f1 = metrics['per_class'][name]['f1-score']
-        print(f"       {name}: F1={f1:.4f}")
+    for name, vals in metrics['per_class'].items():
+        print(f"       {name}: F1={vals['f1-score']:.4f}, Precision={vals['precision']:.4f}, Recall={vals['recall']:.4f}")
+    print(f"\n       Backup of old model: {BACKUP_PATH}")
+    print(f"       If the new model is worse, restore: copy {BACKUP_PATH} → {MODEL_PATH}")
+    print(f"{'='*60}")
 
 
 if __name__ == "__main__":

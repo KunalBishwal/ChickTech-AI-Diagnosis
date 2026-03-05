@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,10 @@ import { auth, db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import RollingText from "@/components/ui/rolling-text";
+import VoiceSymptomLogger from "@/components/VoiceSymptomLogger";
+import { useLanguage } from "@/context/LanguageContext";
+import LanguageSelector from "@/components/LanguageSelector";
+import TTSButton from "@/components/TTSButton";
 
 import {
   VideoPlayer,
@@ -59,6 +63,23 @@ export default function DiagnosisSection() {
   const [diseaseType, setDiseaseType] = useState<DiseaseType>("coccidiosis");
   const [diseaseName, setDiseaseName] = useState<string | null>(null);
   const [recommendation, setRecommendation] = useState<string | null>(null);
+
+  // --- Sarvam AI: Voice + Global Translation ---
+  const { t, tBatch, lang, isTranslating } = useLanguage();
+
+  // Pre-warm translation cache when a diagnosis result arrives
+  useEffect(() => {
+    if (lang === "en-IN" || !diseaseName) return;
+    const texts = [diseaseName, ...(recommendation ? [recommendation] : [])];
+    tBatch(texts);
+  }, [lang, diseaseName, recommendation, tBatch]);
+
+  // Voice symptom handler
+  const handleVoiceTranscript = useCallback((transcript: string, pipeline: "coccidiosis" | "external-lesion" | null) => {
+    if (pipeline) {
+      setDiseaseType(pipeline);
+    }
+  }, []);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -183,8 +204,11 @@ export default function DiagnosisSection() {
         ? "/predict"
         : "/predict/external-lesion";
 
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}`;
+      console.log("🌐 Sending prediction request to:", apiUrl);
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}`,
+        apiUrl,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -194,7 +218,9 @@ export default function DiagnosisSection() {
 
       // 🔥 Important fix
       if (!response.ok) {
-        throw new Error(`Server responded with ${response.status}`);
+        const errText = await response.text();
+        console.error("❌ Server error response:", response.status, errText);
+        throw new Error(`Server responded with ${response.status}: ${errText}`);
       }
 
       const data = await response.json();
@@ -245,12 +271,12 @@ export default function DiagnosisSection() {
         }
       }, 3000); // Reduced to 3s for better feel
 
-    } catch (error) {
-      console.error("Prediction failed:", error);
+    } catch (error: any) {
+      console.error("❌ Prediction failed:", error?.message || error);
       setIsScanning(false);
 
       toast.error(
-        "Analysis failed. Please check your connection and try again."
+        `Analysis failed: ${error?.message || "Please check your connection and try again."}`
       );
     }
   };
@@ -451,14 +477,14 @@ export default function DiagnosisSection() {
               <Camera className="w-10 h-10 text-white" />
             </div>
             <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
-              Experience the{" "}
+              {t("Experience the")}{" "}
               <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-purple-600">
-                Magic
+                {t("Magic")}
               </span>
             </h2>
 
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto">
-              Upload a photo of your chicken and let our AI reveal its health status.
+              {t("Upload a photo of your chicken and let our AI reveal its health status.")}
             </p>
           </div>
         </ScrollReveal>
@@ -473,7 +499,7 @@ export default function DiagnosisSection() {
                     {/* Disease Type Selector */}
                     <div className="mb-8">
                       <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-                        Select Detection Type
+                        {t("Select Detection Type")}
                       </p>
                       <div className="flex justify-center gap-3">
                         <button
@@ -484,7 +510,7 @@ export default function DiagnosisSection() {
                             }`}
                         >
                           <Bug className="w-4 h-4" />
-                          Coccidiosis
+                          {t("Coccidiosis")}
                         </button>
                         <button
                           onClick={() => setDiseaseType("external-lesion")}
@@ -494,13 +520,13 @@ export default function DiagnosisSection() {
                             }`}
                         >
                           <Stethoscope className="w-4 h-4" />
-                          Bumblefoot & Fowlpox
+                          {t("Bumblefoot & Fowlpox")}
                         </button>
                       </div>
                       <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
                         {diseaseType === "coccidiosis"
-                          ? "Detects coccidiosis from fecal samples"
-                          : "Detects Fowlpox & Bumblefoot from skin/foot images"}
+                          ? t("Detects coccidiosis from fecal samples")
+                          : t("Detects Fowlpox & Bumblefoot from skin/foot images")}
                       </p>
                     </div>
 
@@ -509,7 +535,7 @@ export default function DiagnosisSection() {
                         <Upload className="w-12 h-12 text-blue-600" />
                       </div>
                       <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
-                        Upload Your Chicken Photo
+                        {t("Upload Your Chicken Photo")}
                       </h3>
                       <input
                         ref={fileInputRef}
@@ -529,7 +555,7 @@ export default function DiagnosisSection() {
                           className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 text-lg shadow-xl hover:scale-105"
                         >
                           <Sparkles className="w-5 h-5 mr-2" />
-                          Select Image
+                          {t("Select Image")}
                         </Button>
 
                         <Button
@@ -539,13 +565,23 @@ export default function DiagnosisSection() {
                           className="px-8 py-4 text-lg border-2 hover:text-purple-500 hover:bg-purple-50 hover:scale-105 transition-all duration-300"
                         >
                           <Clock className="w-5 h-5 mr-2 text-purple-500" />
-                          View History
+                          {t("View History")}
                         </Button>
                       </div>
                     </div>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">
-                      Supports JPG, PNG, and WebP formats • Max 10MB
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
+                      {t("Supports JPG, PNG, and WebP formats • Max 10MB")}
                     </p>
+
+                    {/* Voice Symptom Logger */}
+                    <div className="pt-6 border-t border-gray-200/50 dark:border-gray-700/50">
+                      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                        {t("Or describe symptoms by voice")}
+                      </p>
+                      <VoiceSymptomLogger
+                        onTranscriptReady={handleVoiceTranscript}
+                      />
+                    </div>
                   </div>
                 </ScrollReveal>
               ) : (
@@ -574,27 +610,32 @@ export default function DiagnosisSection() {
                         </div>
                       </div>
                       <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                        AI Analysis in Progress
+                        {t("AI Analysis in Progress")}
                       </h3>
                       <p className="text-gray-600 dark:text-gray-400 text-lg">
-                        Analyzing your image using deep learning...
+                        {t("Analyzing your image using deep learning...")}
                       </p>
                     </div>
                   ) : (
                     result && (
                       <div ref={resultRef} className="text-center py-8 fade-in">
+                        {/* Language selector is now in the Navigation bar — no per-component selector */}
+
                         {result === "healthy" ? (
                           <>
                             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                            <h3 className="text-3xl font-bold text-green-600">
-                              {diseaseName || "Healthy"} 🐔
-                            </h3>
+                            <div className="flex items-center justify-center gap-3 mb-1">
+                              <h3 className="text-3xl font-bold text-green-600">
+                                {t(diseaseName || "Healthy")} 🐔
+                              </h3>
+                              <TTSButton text={t(diseaseName || "Healthy")} compact={false} />
+                            </div>
                             <p className="text-gray-700 dark:text-gray-300 mt-3 text-lg">
-                              Great job! Your flock seems perfectly fine.
+                              {t("Great job! Your flock seems perfectly fine.")}
                             </p>
                             {recommendation && (
                               <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm max-w-lg mx-auto italic">
-                                💡 {recommendation}
+                                💡 {t(recommendation)}
                               </p>
                             )}
                           </>
@@ -602,10 +643,10 @@ export default function DiagnosisSection() {
                           <>
                             <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
                             <h3 className="text-3xl font-bold text-amber-600">
-                              Inconclusive Result ⚠️
+                              {t("Inconclusive Result")} ⚠️
                             </h3>
                             <p className="text-gray-700 dark:text-gray-300 mt-3 text-lg max-w-xl mx-auto">
-                              The AI confidence is too low to make a reliable diagnosis.
+                              {t("The AI confidence is too low to make a reliable diagnosis.")}
                             </p>
                             {recommendation && (
                               <p className="text-amber-600 dark:text-amber-400 mt-3 text-sm max-w-lg mx-auto font-medium">
@@ -616,16 +657,20 @@ export default function DiagnosisSection() {
                         ) : (
                           <>
                             <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                            <h3 className="text-3xl font-bold text-red-600">
-                              {diseaseName || "Disease"} Detected
-                            </h3>
+                            <div className="flex items-center justify-center gap-3 mb-1">
+                              <h3 className="text-3xl font-bold text-red-600">
+                                {t(diseaseName || "Disease")} {t("Detected")}
+                              </h3>
+                              <TTSButton text={t(diseaseName || "Disease")} compact={false} />
+                            </div>
                             <p className="text-gray-700 dark:text-gray-300 mt-3 text-lg max-w-xl mx-auto">
-                              Our AI has detected signs of {diseaseName?.toLowerCase() || "disease"} in this image.
+                              {t("Our AI has detected signs of")} {t(diseaseName?.toLowerCase() || "disease")} {t("in this image.")}
                             </p>
                             {recommendation && (
                               <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 rounded-xl max-w-lg mx-auto">
                                 <p className="text-red-700 dark:text-red-300 text-sm text-left">
-                                  🩺 <span className="font-semibold">Recommendation:</span> {recommendation}
+                                  🩺 <span className="font-semibold">{t("Recommendation:")}</span>{" "}
+                                  {t(recommendation)}
                                 </p>
                               </div>
                             )}
@@ -655,7 +700,7 @@ export default function DiagnosisSection() {
                                   }
                                 }}
                               >
-                                🩺 View Cure & Next Steps
+                                🩺 {t("View Cure & Next Steps")}
                               </Button>
                             </div>
                           </>
@@ -664,7 +709,7 @@ export default function DiagnosisSection() {
                         {confidence !== null && (
                           <div className="mt-6 max-w-md mx-auto">
                             <p className="text-gray-700 dark:text-gray-300 mb-2 font-medium">
-                              Confidence: {animatedConfidence.toFixed(2)}%
+                              {t("Confidence:")} {animatedConfidence.toFixed(2)}%
                             </p>
                             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
                               <div
@@ -687,7 +732,7 @@ export default function DiagnosisSection() {
                       size="lg"
                       className="px-8 py-4 text-lg border-2 hover:text-blue-500 hover:bg-gray-100 hover:scale-105 transition-all duration-300"
                     >
-                      Analyze Another Image
+                      {t("Analyze Another Image")}
                     </Button>
                     <Button
                       variant="outline"
@@ -696,7 +741,7 @@ export default function DiagnosisSection() {
                       className="px-8 py-4 text-lg border-2 hover:text-purple-500 hover:bg-purple-50 hover:scale-105 transition-all duration-300"
                     >
                       <Clock className="w-5 h-5 mr-2 text-purple-500" />
-                      View Full History
+                      {t("View Full History")}
                     </Button>
                   </div>
                 </div>

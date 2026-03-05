@@ -28,6 +28,9 @@ The platform provides:
 ## 🧠 Core Features
 
 ✅ **Dual Diagnosis Modes:** Choose between Coccidiosis (Fecal) and External Lesion (Skin/Foot) detection.  
+✅ **Multilingual Translation (Sarvam AI):** Instantly translate the entire application into 10+ Indic languages with high-speed batching.  
+✅ **Voice-to-Text Symptom Logger (Sarvam AI):** Speak symptoms naturally and let the AI automatically suggest the right diagnostic path.  
+✅ **Text-to-Speech Accessibility (Sarvam AI):** Listen to diagnosis results and treatment steps completely in regional languages.  
 ✅ **Splash Cursor Effect:** Premium WebGL fluid simulation that follows the user's cursor.  
 ✅ **Dynamic Treatment Guides:** Real-time recovery and prevention steps tailored to the selected disease.  
 ✅ **High Accuracy Models:** Trained on curated poultry datasets with 98%+ accuracy for the external lesion module.  

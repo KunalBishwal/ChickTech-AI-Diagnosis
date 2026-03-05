@@ -10,6 +10,9 @@ import {
     where,
     orderBy,
     getDocs,
+    deleteDoc,
+    doc,
+    writeBatch,
 } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -20,9 +23,12 @@ import {
     Activity,
     Loader2,
     Inbox,
+    Trash2,
+    AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/navigation";
+import { toast } from "sonner";
 import dynamic from "next/dynamic";
 
 const PrismaticBurst = dynamic(
@@ -35,6 +41,8 @@ interface Prediction {
     disease: string;
     confidence: number;
     created_at: Date;
+    disease_type?: string;
+    recommendation?: string;
 }
 
 export default function HistoryPage() {
@@ -43,6 +51,9 @@ export default function HistoryPage() {
     const [predictions, setPredictions] = useState<Prediction[]>([]);
     const [loading, setLoading] = useState(true);
     const [authLoading, setAuthLoading] = useState(true);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [deletingAll, setDeletingAll] = useState(false);
+    const [showDeleteAllConfirm, setShowDeleteAllConfirm] = useState(false);
 
     // Listen for auth state
     useEffect(() => {
@@ -75,6 +86,8 @@ export default function HistoryPage() {
                         disease: d.disease,
                         confidence: d.confidence,
                         created_at: d.created_at?.toDate?.() ?? new Date(),
+                        disease_type: d.disease_type,
+                        recommendation: d.recommendation,
                     };
                 });
                 setPredictions(data);
@@ -96,6 +109,51 @@ export default function HistoryPage() {
             hour: "2-digit",
             minute: "2-digit",
         });
+    };
+
+    // Delete a single prediction
+    const handleDeleteOne = async (predId: string) => {
+        setDeletingId(predId);
+        try {
+            await deleteDoc(doc(db, "predictions", predId));
+            setPredictions((prev) => prev.filter((p) => p.id !== predId));
+            toast.success("Prediction deleted.");
+        } catch (err) {
+            console.error("Delete error:", err);
+            toast.error("Failed to delete prediction.");
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
+    // Delete ALL predictions for the current user
+    const handleDeleteAll = async () => {
+        if (!user) return;
+        setDeletingAll(true);
+        setShowDeleteAllConfirm(false);
+
+        try {
+            // Firestore batched deletes (max 500 per batch)
+            const q = query(
+                collection(db, "predictions"),
+                where("user_id", "==", user.uid)
+            );
+            const snapshot = await getDocs(q);
+
+            const batch = writeBatch(db);
+            snapshot.docs.forEach((d) => {
+                batch.delete(doc(db, "predictions", d.id));
+            });
+            await batch.commit();
+
+            setPredictions([]);
+            toast.success(`Deleted ${snapshot.size} prediction(s).`);
+        } catch (err) {
+            console.error("Delete all error:", err);
+            toast.error("Failed to delete all predictions.");
+        } finally {
+            setDeletingAll(false);
+        }
     };
 
     if (authLoading) {
@@ -148,12 +206,12 @@ export default function HistoryPage() {
                         </p>
                     </motion.div>
 
-                    {/* Back button */}
+                    {/* Action Bar: Back + Delete All */}
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
-                        className="mb-8"
+                        className="mb-8 flex items-center justify-between flex-wrap gap-3"
                     >
                         <Button
                             variant="outline"
@@ -163,6 +221,52 @@ export default function HistoryPage() {
                             <ArrowLeft className="w-4 h-4" />
                             Back to Home
                         </Button>
+
+                        {predictions.length > 0 && (
+                            <div className="relative">
+                                {showDeleteAllConfirm ? (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className="flex items-center gap-2 p-3 bg-red-500/20 backdrop-blur-xl border border-red-400/30 rounded-xl"
+                                    >
+                                        <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                                        <span className="text-sm text-red-200 font-medium">
+                                            Delete all {predictions.length} records?
+                                        </span>
+                                        <Button
+                                            size="sm"
+                                            onClick={handleDeleteAll}
+                                            disabled={deletingAll}
+                                            className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 h-auto"
+                                        >
+                                            {deletingAll ? (
+                                                <Loader2 className="w-3 h-3 animate-spin" />
+                                            ) : (
+                                                "Yes, Delete"
+                                            )}
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={() => setShowDeleteAllConfirm(false)}
+                                            className="text-gray-300 hover:text-white text-xs px-2 py-1 h-auto"
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </motion.div>
+                                ) : (
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => setShowDeleteAllConfirm(true)}
+                                        className="gap-2 border-2 border-red-400/30 bg-red-500/10 text-red-300 hover:bg-red-500/20 hover:text-red-200 hover:scale-105 transition-all duration-300"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                        Delete All
+                                    </Button>
+                                )}
+                            </div>
+                        )}
                     </motion.div>
 
                     {/* Content */}
@@ -200,12 +304,14 @@ export default function HistoryPage() {
                                 {predictions.map((pred, index) => {
                                     const isHealthy = pred.disease.toLowerCase().includes("healthy");
                                     const confidencePercent = (pred.confidence * 100).toFixed(1);
+                                    const isDeleting = deletingId === pred.id;
 
                                     return (
                                         <motion.div
                                             key={pred.id}
                                             initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
+                                            animate={{ opacity: isDeleting ? 0.4 : 1, y: 0 }}
+                                            exit={{ opacity: 0, x: -100, height: 0 }}
                                             transition={{
                                                 duration: 0.4,
                                                 delay: index * 0.08,
@@ -237,29 +343,57 @@ export default function HistoryPage() {
                                                         </h4>
                                                         <p className="text-sm text-gray-400">
                                                             {formatDate(pred.created_at)}
+                                                            {pred.disease_type && (
+                                                                <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-white/10 text-gray-300">
+                                                                    {pred.disease_type === "coccidiosis" ? "Fecal" : "External"}
+                                                                </span>
+                                                            )}
                                                         </p>
                                                     </div>
                                                 </div>
 
-                                                {/* Right: Confidence */}
-                                                <div className="flex items-center gap-3">
-                                                    <Activity
-                                                        className={`w-5 h-5 ${isHealthy ? "text-green-400" : "text-red-400"
-                                                            }`}
-                                                    />
-                                                    <div className="text-right">
-                                                        <p className="text-sm text-gray-400 font-medium">
-                                                            Confidence
-                                                        </p>
-                                                        <p
-                                                            className={`text-xl font-bold ${isHealthy ? "text-green-400" : "text-red-400"
+                                                {/* Right: Confidence + Delete */}
+                                                <div className="flex items-center gap-4">
+                                                    <div className="flex items-center gap-3">
+                                                        <Activity
+                                                            className={`w-5 h-5 ${isHealthy ? "text-green-400" : "text-red-400"
                                                                 }`}
-                                                        >
-                                                            {confidencePercent}%
-                                                        </p>
+                                                        />
+                                                        <div className="text-right">
+                                                            <p className="text-sm text-gray-400 font-medium">
+                                                                Confidence
+                                                            </p>
+                                                            <p
+                                                                className={`text-xl font-bold ${isHealthy ? "text-green-400" : "text-red-400"
+                                                                    }`}
+                                                            >
+                                                                {confidencePercent}%
+                                                            </p>
+                                                        </div>
                                                     </div>
+
+                                                    {/* Delete button */}
+                                                    <button
+                                                        onClick={() => handleDeleteOne(pred.id)}
+                                                        disabled={isDeleting}
+                                                        className="p-2 rounded-xl bg-white/5 hover:bg-red-500/20 border border-transparent hover:border-red-400/30 text-gray-500 hover:text-red-400 transition-all duration-300 opacity-0 group-hover:opacity-100"
+                                                        title="Delete this prediction"
+                                                    >
+                                                        {isDeleting ? (
+                                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                                        ) : (
+                                                            <Trash2 className="w-4 h-4" />
+                                                        )}
+                                                    </button>
                                                 </div>
                                             </div>
+
+                                            {/* Recommendation (if available) */}
+                                            {pred.recommendation && (
+                                                <p className="mt-3 text-xs text-gray-400/80 italic line-clamp-2">
+                                                    💡 {pred.recommendation}
+                                                </p>
+                                            )}
 
                                             {/* Confidence Bar */}
                                             <div className="mt-4 w-full bg-white/10 dark:bg-gray-700/40 rounded-full h-2 overflow-hidden">
