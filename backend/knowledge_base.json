@@ -1,0 +1,733 @@
+{
+    "chunks": [
+        {
+            "id": "cocci_isolation",
+            "disease": "coccidiosis",
+            "category": "immediate_action",
+            "title": "Immediate Isolation Protocol",
+            "content": "Separate infected birds from the healthy flock immediately to prevent oocyst transmission. Move symptomatic birds showing bloody droppings, lethargy, or ruffled feathers to a quarantine area. Restrict movement between infected and clean areas using dedicated boots and clothing. Monitor the remaining flock for signs of infection including weight loss, pale combs, and decreased feed intake.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 1
+        },
+        {
+            "id": "cocci_amprolium",
+            "disease": "coccidiosis",
+            "category": "medication",
+            "title": "Amprolium (Corid) — First-Line Treatment",
+            "content": "Amprolium is the first-line treatment for coccidiosis. Administer 10 mg/kg body weight in drinking water for 5 to 7 days. Ensure medicated water is the ONLY water source during the treatment period. Amprolium works by blocking thiamine uptake in the coccidia parasite. It is safe for birds and does not require a withdrawal period for eggs.",
+            "medications": [
+                "amprolium",
+                "corid"
+            ],
+            "severity_applies": [
+                "moderate",
+                "severe"
+            ],
+            "priority": 2
+        },
+        {
+            "id": "cocci_toltrazuril",
+            "disease": "coccidiosis",
+            "category": "medication",
+            "title": "Toltrazuril (Baycox) — Alternative Treatment",
+            "content": "Toltrazuril (Baycox) is an alternative anticoccidial drug. Administer 7 mg/kg body weight as a single oral dose. Repeat after 48 hours if needed. Toltrazuril is effective against all intracellular stages of coccidia. It is particularly useful for severe outbreaks or when amprolium resistance is suspected.",
+            "medications": [
+                "toltrazuril",
+                "baycox"
+            ],
+            "severity_applies": [
+                "moderate",
+                "severe"
+            ],
+            "priority": 3
+        },
+        {
+            "id": "cocci_sulfonamides",
+            "disease": "coccidiosis",
+            "category": "medication",
+            "title": "Sulfonamides — Second-Line Treatment",
+            "content": "Sulfonamides such as Sulfadimethoxine are used as a second-line treatment. Administer 50 mg/kg on day 1, then 25 mg/kg for 4 to 5 days. Use only when first-line treatments are unavailable or resistance is confirmed. Sulfonamides have a withdrawal period of 10 days for eggs and 5 days for meat.",
+            "medications": [
+                "sulfadimethoxine",
+                "sulfonamides"
+            ],
+            "severity_applies": [
+                "severe"
+            ],
+            "priority": 4
+        },
+        {
+            "id": "cocci_rehydration",
+            "disease": "coccidiosis",
+            "category": "supportive_care",
+            "title": "Rehydration & Electrolyte Therapy",
+            "content": "Coccidiosis causes severe dehydration from intestinal bleeding. Add oral rehydration salts (ORS) to drinking water throughout the treatment period. Include electrolytes containing potassium and sodium to combat fluid loss. Offer glucose-enriched water (20g sugar per litre) for energy recovery. Ensure water is always fresh, clean, and accessible. Dehydration kills faster than the parasite itself.",
+            "medications": [
+                "ORS",
+                "electrolytes"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 2
+        },
+        {
+            "id": "cocci_vitamins",
+            "disease": "coccidiosis",
+            "category": "nutrition",
+            "title": "Vitamin & Nutritional Support for Coccidiosis",
+            "content": "Intestinal damage from coccidiosis impairs nutrient absorption. Supplement with Vitamin A at 10,000 IU/kg feed to rebuild damaged intestinal epithelium. Vitamin K3 (Menadione) is critical for blood clotting and counteracts haemorrhagic damage. Vitamin D3 with Calcium supports bone strength weakened during infection. Probiotics containing Lactobacillus help repopulate beneficial gut flora destroyed by coccidia and medication. B-complex vitamins stimulate appetite and energy metabolism.",
+            "medications": [
+                "vitamin_a",
+                "vitamin_k3",
+                "vitamin_d3",
+                "probiotics"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 3
+        },
+        {
+            "id": "cocci_sanitation",
+            "disease": "coccidiosis",
+            "category": "environmental",
+            "title": "Deep Sanitation of Housing",
+            "content": "Coccidial oocysts are extremely resilient in the environment. Remove ALL litter, bag it, and dispose far from the poultry area. Scrub floors, walls, and feeders with ammonia-based disinfectant at 10% solution. Steam-clean surfaces if possible as heat above 60°C kills oocysts. Allow housing to fully dry before replacing with fresh, dry litter (wood shavings preferred). Clean and disinfect drinkers daily during and after the outbreak window.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 4
+        },
+        {
+            "id": "cocci_prevention",
+            "disease": "coccidiosis",
+            "category": "prevention",
+            "title": "Long-Term Coccidiosis Prevention",
+            "content": "Prevent recurrence through vaccination, litter management, and controlled exposure. Vaccinate with live oocyst vaccines such as Paracox-8 at day 1-3 of age for future flocks. Use anticoccidial feed additives like Monensin or Salinomycin as prophylaxis in starter feeds. Maintain litter moisture below 25% as wet litter is a breeding ground for sporulation. Practice a regular rotation of anticoccidial drugs to prevent resistance buildup. Avoid overcrowding and maintain at least 0.1 square metres per bird to reduce oocyst concentration.",
+            "medications": [
+                "paracox-8",
+                "monensin",
+                "salinomycin"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 5
+        },
+        {
+            "id": "fowlpox_identify",
+            "disease": "fowlpox",
+            "category": "immediate_action",
+            "title": "Identify the Form & Isolate",
+            "content": "Fowlpox presents in two forms. Dry (cutaneous) form shows wart-like lesions on the comb, wattle, eyelids, and unfeathered skin. Wet (diphtheritic) form causes cheesy yellow membranes in the mouth and trachea which can cause asphyxiation. Isolate ALL affected birds immediately as the virus spreads via mosquitoes and direct contact. Inspect every bird in the flock for early-stage lesions which appear as small red papules.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 1
+        },
+        {
+            "id": "fowlpox_wound_care",
+            "disease": "fowlpox",
+            "category": "treatment",
+            "title": "Wound Care & Lesion Treatment for Fowlpox",
+            "content": "There is no antiviral cure for fowlpox. Treatment focuses on supportive wound care and preventing secondary infections. For dry form: gently clean scabs with dilute iodine solution (Betadine 1:10). Do NOT forcibly remove scabs. For wet form: carefully remove diphtheritic membranes from the throat with forceps, then swab with iodine-glycerin. Apply antibiotic ointment such as Neosporin or Terramycin to lesions to prevent bacterial superinfection. For eye involvement: flush with sterile saline and apply ophthalmic antibiotic ointment.",
+            "medications": [
+                "betadine",
+                "neosporin",
+                "terramycin"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 2
+        },
+        {
+            "id": "fowlpox_antibiotics",
+            "disease": "fowlpox",
+            "category": "medication",
+            "title": "Antibiotic Therapy for Secondary Infections (Fowlpox)",
+            "content": "While antibiotics do not treat the fowlpox virus itself, secondary bacterial infections are common and must be addressed. Oxytetracycline at 50 mg/kg in drinking water for 5-7 days for respiratory secondary infections. Tylosin at 0.5 g/L in drinking water if Mycoplasma co-infection is suspected. Enrofloxacin at 10 mg/kg for severe secondary E. coli infections (veterinary prescription required). Monitor for respiratory distress as wet pox can obstruct airways and may need emergency intervention.",
+            "medications": [
+                "oxytetracycline",
+                "tylosin",
+                "enrofloxacin"
+            ],
+            "severity_applies": [
+                "moderate",
+                "severe"
+            ],
+            "priority": 3
+        },
+        {
+            "id": "fowlpox_nutrition",
+            "disease": "fowlpox",
+            "category": "nutrition",
+            "title": "Nutritional & Immune Support for Fowlpox",
+            "content": "Boost the immune system to help the bird's own defences fight off the viral infection. Vitamin A at 15,000 IU/kg feed is essential for epithelial tissue repair and immune function. Vitamin E combined with Selenium is a powerful antioxidant combo that accelerates immune response. Vitamin C (ascorbic acid) at 200-500 mg/L in water reduces stress and supports healing. High-protein feed at 18-20% crude protein to support tissue regeneration during recovery. Provide soft, easily swallowed feed for birds with oral lesions — moistened mash works well.",
+            "medications": [
+                "vitamin_a",
+                "vitamin_e",
+                "selenium",
+                "vitamin_c"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 3
+        },
+        {
+            "id": "fowlpox_mosquito",
+            "disease": "fowlpox",
+            "category": "environmental",
+            "title": "Mosquito & Vector Control for Fowlpox",
+            "content": "Fowlpox is transmitted primarily by mosquitoes. Drain all standing water sources near the poultry house including puddles, clogged gutters, and old tyres. Install fine-mesh mosquito nets (1mm) on all windows and ventilation openings. Use residual insecticide sprays (permethrin-based) inside and around the housing weekly. Deploy mosquito traps during peak activity hours at dusk and dawn. Maintain tight biosecurity — separate tools, clothing, and equipment between houses.",
+            "medications": [
+                "permethrin"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 4
+        },
+        {
+            "id": "fowlpox_vaccination",
+            "disease": "fowlpox",
+            "category": "prevention",
+            "title": "Fowlpox Vaccination & Prevention",
+            "content": "Fowlpox is 100% preventable through vaccination. Use the wing-web method with live fowlpox vaccine applied to the wing web at 6-10 weeks of age. Check for vaccine take 7-10 days after — a visible swelling or scab at the site confirms immunity. Revaccinate if no take is observed. In endemic areas, vaccinate EVERY batch without exception. Birds that recover develop lifelong immunity but remain carriers, so quarantine recovered birds from naive ones.",
+            "medications": [
+                "fowlpox_vaccine"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 5
+        },
+        {
+            "id": "bumblefoot_detection",
+            "disease": "bumblefoot",
+            "category": "immediate_action",
+            "title": "Early Detection & Grading of Bumblefoot",
+            "content": "Bumblefoot (pododermatitis) progresses in stages. Grade I: mild redness or swelling on the footpad, treat conservatively. Grade II: visible dark scab (kernel) on the pad with swelling, needs soaking and bandaging. Grade III: deep abscess with pus, swelling into joints, requires surgical debridement. Grade IV/V: infection has spread to tendons or bone, prognosis is poor, consult a vet immediately. Check feet regularly during routine health inspections, especially for heavy breeds like Orpingtons and Brahmas.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 1
+        },
+        {
+            "id": "bumblefoot_soaking",
+            "disease": "bumblefoot",
+            "category": "treatment",
+            "title": "Soaking & Wound Preparation for Bumblefoot",
+            "content": "For Grade I-III bumblefoot, begin by softening the infected tissue through warm antiseptic soaks. Soak the affected foot in warm Epsom salt water (1 tablespoon per cup) for 15-20 minutes. This softens the scab kernel and draws out infection. After soaking, gently dry the foot with clean gauze. For Grade I: soaking alone combined with antibiotic ointment and bandage may be sufficient. Repeat soaking 1-2 times daily for mild cases until swelling resolves.",
+            "medications": [
+                "epsom_salt"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 2
+        },
+        {
+            "id": "bumblefoot_surgery",
+            "disease": "bumblefoot",
+            "category": "treatment",
+            "title": "Surgical Debridement for Bumblefoot (Grade II-III)",
+            "content": "For cases with visible kernel or abscess, careful removal of the infected core is required. Sterilise all instruments (scalpel, tweezers, forceps) with isopropyl alcohol or flame. After soaking, use a sterile scalpel to carefully excise the dark kernel or plug. Remove ALL pus and necrotic tissue — the cavity should be clean and bleeding slightly indicating healthy tissue. Flush the wound cavity with dilute Chlorhexidine (0.05%) or Betadine solution. Pack the wound with antibiotic ointment (Mupirocin or Neosporin) and cover with non-stick gauze. CAUTION: If infection has reached the bone or tendon, refer to a vet — do NOT attempt deep surgery.",
+            "medications": [
+                "chlorhexidine",
+                "betadine",
+                "mupirocin",
+                "neosporin"
+            ],
+            "severity_applies": [
+                "moderate",
+                "severe"
+            ],
+            "priority": 2
+        },
+        {
+            "id": "bumblefoot_antibiotics",
+            "disease": "bumblefoot",
+            "category": "medication",
+            "title": "Antibiotic Therapy & Bandaging for Bumblefoot",
+            "content": "Systemic and topical antibiotics are essential for bumblefoot treatment. Topical: apply Mupirocin (Bactroban) or Neosporin ointment to the wound daily. Systemic for severe cases: Amoxicillin/Clavulanate 125 mg/kg orally for 7-14 days. Alternative: Lincomycin combined with Spectinomycin (Linco-Spectin) in water for resistant Staphylococcus infections. Bandage with non-stick pad then gauze then vet wrap (Coban). Change every 1-2 days. Keep the bird on soft bedding such as towels or soft shavings — no wire floors or rough perches.",
+            "medications": [
+                "mupirocin",
+                "neosporin",
+                "amoxicillin_clavulanate",
+                "lincomycin",
+                "spectinomycin"
+            ],
+            "severity_applies": [
+                "moderate",
+                "severe"
+            ],
+            "priority": 3
+        },
+        {
+            "id": "bumblefoot_recovery",
+            "disease": "bumblefoot",
+            "category": "recovery",
+            "title": "Post-Op Monitoring & Recovery for Bumblefoot",
+            "content": "Recovery from bumblefoot takes 2-6 weeks depending on severity. Check bandages daily for soiling, slippage, or odour which may indicate anaerobic infection. Watch for signs of systemic infection: lethargy, fever, loss of appetite, swelling spreading up the leg. Restrict movement — keep bird in a small, clean recovery pen with low perches. Ensure the bird is eating and drinking normally — offer treats and high-protein feed to encourage appetite. Full healing: wound should close cleanly without scab regrowth within 3-6 weeks.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 4
+        },
+        {
+            "id": "bumblefoot_prevention",
+            "disease": "bumblefoot",
+            "category": "prevention",
+            "title": "Environmental Prevention for Bumblefoot",
+            "content": "Bumblefoot is caused by foot injuries combined with Staphylococcus bacteria. Eliminate root causes: sand down or round off all perch edges as sharp or narrow perches cause pressure sores. Perch diameter should be 4-5 cm for standard breeds. Keep perch heights reasonable at 60 cm or less as hard landings on rough ground cause foot injuries. Remove sharp objects such as wire, nails, and stones from the run area. Maintain dry litter — chronically wet, ammonia-rich litter softens footpads and breeds bacteria. Provide adequate space to prevent trampling and foot injuries from overcrowding.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 5
+        },
+        {
+            "id": "general_when_to_call_vet",
+            "disease": "general",
+            "category": "emergency",
+            "title": "When to Call a Veterinarian",
+            "content": "Seek immediate veterinary assistance in the following scenarios: mortality rate exceeds 5% of the flock within 48 hours; respiratory distress including gasping, open-mouth breathing, or cyanosis; neurological symptoms such as head tilting, circling, paralysis; no improvement after 3 days of treatment; infection spreading rapidly despite isolation measures; Grade IV-V bumblefoot with bone or tendon involvement; wet fowlpox causing airway obstruction. A qualified poultry veterinarian can perform necropsy, culture, and antibiotic sensitivity testing that is not possible with on-farm assessment alone.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 6
+        },
+        {
+            "id": "coryza_isolation",
+            "disease": "coryza",
+            "category": "immediate_action",
+            "title": "Immediate Isolation for Coryza",
+            "content": "Infectious Coryza is highly contagious. Immediately isolate birds showing facial swelling, foul-smelling nasal discharge, or sneezing. These are classic signs of Coryza. Ensure strict biosecurity between the isolation pen and the healthy flock, as the bacteria (Avibacterium paragallinarum) spreads rapidly through direct contact and contaminated water.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 1
+        },
+        {
+            "id": "coryza_antibiotics",
+            "disease": "coryza",
+            "category": "medication",
+            "title": "Antibiotic Treatment for Coryza",
+            "content": "Erythromycin or Oxytetracycline administered in drinking water are effective first-line treatments for Infectious Coryza. Treat the entire flock if multiple birds are symptomatic, as the bacteria spreads quickly. Follow precise dosing instructions on the antibiotic label (typically 5-7 days). Sulfa drugs can also be used but check egg withdrawal periods.",
+            "medications": [
+                "erythromycin",
+                "oxytetracycline",
+                "sulfa"
+            ],
+            "severity_applies": [
+                "moderate",
+                "severe"
+            ],
+            "priority": 2
+        },
+        {
+            "id": "coryza_environment",
+            "disease": "coryza",
+            "category": "environmental",
+            "title": "Ventilation and Sanitation for Coryza",
+            "content": "Poor ventilation exacerbates respiratory diseases like Coryza. Ensure the housing has excellent airflow without direct drafts on the birds. Daily cleaning and disinfection of waterers are mandatory, as the disease is often transmitted through drinking water. Control moisture in the litter to reduce ammonia fumes, which irritate the respiratory tract.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 3
+        },
+        {
+            "id": "ndv_isolation",
+            "disease": "newcastle",
+            "category": "immediate_action",
+            "title": "Critical Quarantine for Newcastle Disease",
+            "content": "Newcastle Disease (NDV) is a highly contagious and often fatal viral disease. Symptoms include twisting of the neck, paralysis, gasping, and greenish diarrhoea. If you suspect NDV, impose a strict and absolute quarantine immediately. Do not move any birds, equipment, or feed off the property. Contact your local agricultural authority or state veterinarian immediately, as NDV is a reportable disease.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 1
+        },
+        {
+            "id": "ndv_supportive",
+            "disease": "newcastle",
+            "category": "supportive_care",
+            "title": "Supportive Care for Newcastle Disease",
+            "content": "There is no cure or specific treatment for the Newcastle virus. Care is purely supportive. Provide broad-spectrum antibiotics (like Oxytetracycline) in the water for 3-5 days strictly to prevent secondary bacterial infections, NOT to treat the virus itself. Increase the temperature of the housing slightly to keep sick birds warm and supply electrolytes to combat dehydration.",
+            "medications": [
+                "oxytetracycline",
+                "electrolytes"
+            ],
+            "severity_applies": [
+                "moderate",
+                "severe"
+            ],
+            "priority": 2
+        },
+        {
+            "id": "ndv_prevention",
+            "disease": "newcastle",
+            "category": "prevention",
+            "title": "Newcastle Vaccination and Biosecurity",
+            "content": "Prevention is the only effective strategy against Newcastle Disease. Implement a strict vaccination program using live B1 or LaSota strains for chicks, followed by booster shots. Maintain extreme biosecurity: restrict farm visitors, sanitize all vehicles entering the property, and do not introduce new birds to the flock without a 30-day quarantine.",
+            "medications": [
+                "ndv_vaccine"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 3
+        },
+        {
+            "id": "coryza_nutrition",
+            "disease": "coryza",
+            "category": "nutrition",
+            "title": "Nutritional Support for Coryza Recovery",
+            "content": "Birds with Infectious Coryza often lose appetite due to facial swelling and difficulty breathing. Provide softened or moistened feed to make eating easier. Supplement with Vitamin A at 10,000 IU/kg feed to strengthen respiratory mucous membranes. Vitamin C at 200-500 mg/L in water reduces stress and supports immune function. Electrolytes in water combat dehydration from reduced water intake. Probiotics help maintain gut health during antibiotic treatment. Ensure protein levels remain at 16-18% to support immune response and recovery.",
+            "medications": [
+                "vitamin_a",
+                "vitamin_c",
+                "electrolytes",
+                "probiotics"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 3
+        },
+        {
+            "id": "coryza_vaccination",
+            "disease": "coryza",
+            "category": "prevention",
+            "title": "Coryza Vaccination and Long-Term Prevention",
+            "content": "Vaccinate with killed bacterin vaccine at 8-10 weeks of age, with a booster at 14-16 weeks. In endemic areas, revaccinate every 6 months. IMPORTANT: recovered birds remain lifetime carriers and can spread Avibacterium paragallinarum without showing symptoms. Do NOT mix recovered birds with naive flocks. Implement all-in/all-out management to break the cycle. Quarantine all new additions for at least 30 days before introducing to the flock.",
+            "medications": [
+                "coryza_vaccine"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 4
+        },
+        {
+            "id": "coryza_timeline",
+            "disease": "coryza",
+            "category": "recovery",
+            "title": "Recovery Timeline for Infectious Coryza",
+            "content": "With proper antibiotic treatment, improvement is typically seen within 2-3 days. Facial swelling begins to reduce by day 3-4. Nasal discharge should clear by day 5-7. Full recovery takes 10-14 days. If no improvement after 3 days of antibiotic therapy, consult a veterinarian as antibiotic resistance may be present. Monitor egg production as it may drop 10-40% during infection and takes 2-4 weeks to return to normal levels after recovery.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 5
+        },
+        {
+            "id": "ndv_nutrition",
+            "disease": "newcastle",
+            "category": "nutrition",
+            "title": "Nutritional Support During Newcastle Disease",
+            "content": "Birds with Newcastle Disease often stop eating and drinking due to neurological and respiratory symptoms. Provide electrolyte-enriched water with glucose (20g sugar per litre) for energy. Vitamin E at 100 IU/kg feed supports neurological recovery. Vitamin B complex helps stimulate appetite and supports nerve function. For birds unable to eat, consider tube feeding with liquid nutrient supplements. Keep water close and easily accessible as paralysed birds cannot walk to distant drinkers.",
+            "medications": [
+                "electrolytes",
+                "vitamin_e",
+                "vitamin_b"
+            ],
+            "severity_applies": [
+                "moderate",
+                "severe"
+            ],
+            "priority": 3
+        },
+        {
+            "id": "ndv_environment",
+            "disease": "newcastle",
+            "category": "environmental",
+            "title": "Environmental Management During Newcastle Outbreak",
+            "content": "NDV is highly resistant in the environment and can survive weeks in contaminated litter and faeces. All dead birds must be incinerated or deeply buried with lime. Disinfect all surfaces with Virkon S or 2% sodium hydroxide solution. Disinfect footwear at entry and exit of each poultry house. The virus is killed by direct sunlight, heat above 56C for 3 hours, and most commercial disinfectants. Do not sell or move any birds or equipment during an active outbreak.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 4
+        },
+        {
+            "id": "ndv_emergency",
+            "disease": "newcastle",
+            "category": "emergency",
+            "title": "Emergency Signs and Reporting for Newcastle Disease",
+            "content": "Newcastle Disease is a notifiable disease in most countries. Contact your local veterinary authority IMMEDIATELY if mortality exceeds 10% in 48 hours, birds show torticollis (twisted neck), greenish diarrhoea is widespread, or egg production drops suddenly by more than 50%. Do NOT attempt to self-treat a suspected virulent NDV outbreak. Penalties exist for failing to report. A veterinarian must confirm diagnosis through laboratory testing (PCR or virus isolation).",
+            "medications": [],
+            "severity_applies": [
+                "severe"
+            ],
+            "priority": 1
+        },
+        {
+            "id": "bumblefoot_nutrition",
+            "disease": "bumblefoot",
+            "category": "nutrition",
+            "title": "Nutritional Support for Bumblefoot Wound Healing",
+            "content": "Proper nutrition accelerates wound healing in bumblefoot cases. Increase protein to 18-20% crude protein to support tissue repair. Supplement with Zinc at 40-80 ppm in feed as it is critical for skin healing and immune function. Vitamin C at 200 mg/L in water supports collagen formation for wound closure. Omega-3 fatty acids from flaxseed oil reduce inflammation. Ensure adequate Biotin (300 mcg/kg feed) for healthy skin and footpad integrity.",
+            "medications": [
+                "zinc",
+                "vitamin_c",
+                "biotin"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 4
+        },
+        {
+            "id": "fowlpox_timeline",
+            "disease": "fowlpox",
+            "category": "recovery",
+            "title": "Recovery Timeline for Fowlpox",
+            "content": "Fowlpox lesions typically take 2-4 weeks to scab over and heal for the dry form. Wet form recovery is slower at 3-5 weeks and carries higher mortality risk (up to 50% if untreated). Scabs should NOT be removed forcibly as the wound underneath is still healing. Egg production may drop 20-30% during infection and takes 3-4 weeks post-recovery to normalise. Birds that recover develop lifelong immunity to that specific strain but may still be susceptible to other avian poxvirus strains.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 5
+        },
+        {
+            "id": "healthy_wellness",
+            "disease": "healthy",
+            "category": "prevention",
+            "title": "Daily Wellness Checklist for Healthy Flocks",
+            "content": "Maintain flock health through daily observation. Check feed and water consumption each morning as a sudden drop is the earliest sign of illness. Observe droppings for colour changes: green (liver/viral), red/bloody (coccidiosis), white/watery (kidney issues). Listen for abnormal breathing sounds like wheezing, sneezing, or gurgling. Inspect combs and wattles for colour change as a pale comb indicates anaemia and a dark/purple comb suggests circulation problems. Check for external parasites (lice, mites) weekly by examining under wings and around the vent.",
+            "medications": [],
+            "severity_applies": [
+                "mild"
+            ],
+            "priority": 1
+        },
+        {
+            "id": "healthy_biosecurity",
+            "disease": "healthy",
+            "category": "prevention",
+            "title": "Biosecurity Best Practices",
+            "content": "Strong biosecurity prevents disease introduction to your flock. Use dedicated clothing and footwear for poultry areas. Implement a footbath with Virkon S or bleach solution at every entry point. Quarantine new birds for 30 days minimum before mixing with the existing flock. Limit visitor access to poultry areas. Control wild bird access to feed and water sources. Purchase birds only from reputable NPIP-certified sources. Maintain a closed flock policy whenever possible.",
+            "medications": [],
+            "severity_applies": [
+                "mild"
+            ],
+            "priority": 2
+        },
+        {
+            "id": "healthy_seasonal",
+            "disease": "healthy",
+            "category": "environmental",
+            "title": "Seasonal Flock Care Guide",
+            "content": "Adjust management by season. HOT WEATHER: provide shade, extra waterers, electrolytes, and ventilation. Heat stress kills above 35C. Avoid handling birds during peak heat. COLD WEATHER: insulate housing but maintain ventilation to prevent ammonia buildup. Provide extra calories through scratch grains in the evening. Prevent frostbite by applying petroleum jelly to combs and wattles. MONSOON/RAINY: keep litter dry as wet litter causes ammonia burns and coccidiosis outbreaks. Ensure drainage around the poultry house.",
+            "medications": [
+                "electrolytes"
+            ],
+            "severity_applies": [
+                "mild"
+            ],
+            "priority": 3
+        },
+        {
+            "id": "mareks_isolation",
+            "disease": "mareks",
+            "category": "immediate_action",
+            "title": "Recognising and Isolating Marek's Disease",
+            "content": "Marek's Disease is caused by a highly contagious herpesvirus that spreads through feather dander and dust. Symptoms include progressive paralysis of legs, wings, or neck; weight loss despite normal appetite; irregular pupil shape (grey eye or ocular Marek's); and tumours on skin or internal organs. Isolate symptomatic birds immediately. The virus can survive in poultry dust for months. There is NO cure once clinical signs appear.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 1
+        },
+        {
+            "id": "mareks_supportive",
+            "disease": "mareks",
+            "category": "supportive_care",
+            "title": "Supportive Care for Marek's Disease",
+            "content": "There is no antiviral treatment for Marek's Disease. Supportive care may help mildly affected birds. Provide Vitamin E and Selenium to support immune function. Keep paralysed birds in a clean, padded area with food and water within reach. Tube feeding may be necessary for birds that cannot eat. Euthanasia should be considered for severely paralysed birds as a humane option. Antibiotics like Oxytetracycline can be given to prevent secondary bacterial infections.",
+            "medications": [
+                "vitamin_e",
+                "selenium",
+                "oxytetracycline"
+            ],
+            "severity_applies": [
+                "moderate",
+                "severe"
+            ],
+            "priority": 2
+        },
+        {
+            "id": "mareks_vaccination",
+            "disease": "mareks",
+            "category": "prevention",
+            "title": "Marek's Vaccination — The Only Defense",
+            "content": "Vaccination at day 1 of life (in-ovo or subcutaneous) with HVT (turkey herpesvirus) or Rispens CVI988 vaccine is the ONLY effective strategy. Vaccination PREVENTS tumour formation and paralysis but does NOT prevent infection or virus shedding. Vaccinated birds can still carry and spread the virus. All chicks must be vaccinated before exposure to the virus. There is NO post-exposure vaccine efficacy. Buy only vaccinated chicks or vaccinate immediately at hatch.",
+            "medications": [
+                "mareks_vaccine"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 3
+        },
+        {
+            "id": "mareks_environment",
+            "disease": "mareks",
+            "category": "environmental",
+            "title": "Environmental Control for Marek's Disease",
+            "content": "Marek's virus lives in feather follicle dander and survives in poultry dust for over a year. Thorough cleaning between flocks is critical. Remove all litter and organic material. Wash surfaces with detergent then disinfect with formaldehyde fumigation or Virkon S. Allow housing to dry completely and rest for at least 2 weeks before introducing new birds. Use HEPA filtration in hatcheries. Avoid raising mixed-age flocks as older vaccinated birds can shed virus to unvaccinated young stock.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 4
+        },
+        {
+            "id": "ai_quarantine",
+            "disease": "avian_influenza",
+            "category": "immediate_action",
+            "title": "Emergency Quarantine for Avian Influenza",
+            "content": "Avian Influenza (Bird Flu) is extremely contagious and potentially zoonotic (can infect humans). If sudden high mortality (over 10% in 24 hours) with respiratory distress, swollen heads, cyanotic combs, and a sudden drop in egg production occurs, suspect Avian Influenza. IMMEDIATELY: stop all movement of birds, people, and equipment on and off the farm. Notify your state veterinarian or USDA within 24 hours as this is a federally reportable disease. Do NOT attempt treatment.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 1
+        },
+        {
+            "id": "ai_biosecurity",
+            "disease": "avian_influenza",
+            "category": "prevention",
+            "title": "Biosecurity to Prevent Avian Influenza",
+            "content": "AI is primarily spread by wild waterfowl (ducks, geese) and contaminated equipment. PREVENT contact between your flock and wild birds by housing poultry indoors or under netting. Never share equipment between farms. Disinfect vehicles, shoes, and clothing before entering poultry areas. Use Virkon S, quaternary ammonium, or bleach solution for disinfection. Do not source birds from live bird markets. Report unusual die-offs in wild birds near your property.",
+            "medications": [],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 2
+        },
+        {
+            "id": "ai_reporting",
+            "disease": "avian_influenza",
+            "category": "emergency",
+            "title": "Reporting and Government Response for Avian Influenza",
+            "content": "Highly Pathogenic Avian Influenza (HPAI) triggers mandatory government response. Affected flocks are typically culled (depopulated) to prevent spread. Financial compensation (indemnity) is usually available from the government for culled birds. A control zone (typically 10 km radius) is established around confirmed cases. Movement restrictions apply to all poultry within the zone. Vaccination against AI may be available in some countries but is restricted in others. Always follow your national veterinary authority guidelines.",
+            "medications": [],
+            "severity_applies": [
+                "severe"
+            ],
+            "priority": 1
+        },
+        {
+            "id": "general_first_aid",
+            "disease": "general",
+            "category": "prevention",
+            "title": "Essential Poultry First Aid Kit",
+            "content": "Every poultry keeper should maintain a first aid kit: Vetericyn wound spray for cuts and abrasions. Betadine (povidone-iodine) solution for disinfecting wounds. Epsom salt for soaking bumblefoot and reducing swelling. Electrolyte powder for dehydration and heat stress. Corid (Amprolium) for emergency coccidiosis treatment. Oxytetracycline powder for bacterial infections. Vet wrap and non-stick gauze for bandaging. Syringes (without needles) for oral medication and tube feeding. Petroleum jelly for frostbite prevention on combs.",
+            "medications": [
+                "vetericyn",
+                "betadine",
+                "epsom_salt",
+                "electrolytes",
+                "amprolium",
+                "oxytetracycline"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 6
+        },
+        {
+            "id": "general_stress",
+            "disease": "general",
+            "category": "supportive_care",
+            "title": "Managing Stress in Poultry",
+            "content": "Stress suppresses the immune system and makes birds vulnerable to disease. Common stressors include overcrowding (maintain minimum 0.1 sqm per bird), sudden feed changes, extreme temperatures, predator presence, loud noises, and new flock additions. Add Vitamin C (200-500 mg/L) to water during stressful periods. Maintain consistent lighting schedules (14-16 hours for layers). Provide environmental enrichment such as perches at varying heights, dust bathing areas, and treat dispensers. Avoid handling birds in the evening as it disrupts roosting.",
+            "medications": [
+                "vitamin_c"
+            ],
+            "severity_applies": [
+                "mild",
+                "moderate",
+                "severe"
+            ],
+            "priority": 5
+        }
+    ]
+}

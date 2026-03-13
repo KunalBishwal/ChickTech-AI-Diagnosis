@@ -189,15 +189,17 @@ export default function LiquidEther({
     };
     animate();
 
-    // Resize handler
-    const handleResize = () => {
-      renderer.setSize(container.clientWidth, container.clientHeight);
-    };
-    window.addEventListener("resize", handleResize);
+    // Resize handler — watch container, not just window
+    const resizeObserver = new ResizeObserver(() => {
+      if (container) {
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      }
+    });
+    resizeObserver.observe(container);
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("resize", handleResize);
+      resizeObserver.disconnect();
       renderer.dispose();
       if (container.contains(renderer.domElement))
         container.removeChild(renderer.domElement);

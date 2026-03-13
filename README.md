@@ -18,8 +18,9 @@ The platform provides:
 | Layer | Technologies Used |
 |-------|--------------------|
 | **Frontend** | Next.js 14, TypeScript, Tailwind CSS, GSAP, OGL (WebGL) |
-| **Backend / API** | Flask (Python), TensorFlow 2.x, Scikit-learn |
-| **Machine Learning** | MobileNetV2 (Transfer Learning), OpenCV |
+| **Backend / API** | Flask (Python), Flask-Limiter, cachetools, pybloom_live |
+| **Machine Learning** | MobileNetV2, OpenCV, Sentence-Transformers (RAG embeddings) |
+| **Generative AI**| Google Gemini (GenAI), Sarvam AI (Translate, STT, TTS) |
 | **Database / Auth** | Firebase (Firestore & Authentication) |
 | **Deployment** | Render (Backend), Vercel (Frontend), Docker |
 
@@ -28,11 +29,12 @@ The platform provides:
 ## 🧠 Core Features
 
 ✅ **Dual Diagnosis Modes:** Choose between Coccidiosis (Fecal) and External Lesion (Skin/Foot) detection.  
+✅ **AI Treatment Plans (RAG):** Gemini-powered, context-aware recovery plans generated instantly by retrieving data from a comprehensive 47-chunk custom Knowledge Base across 9 diseases.
+✅ **Backend Security Layer:** Enterprise-grade security using `flask-limiter` for rate limiting, `pybloom_live` Bloom filters for cache-miss attack prevention, and strict payload sanitization (magic bytes, MIME types).
 ✅ **Multilingual Translation (Sarvam AI):** Instantly translate the entire application into 10+ Indic languages with high-speed batching.  
 ✅ **Voice-to-Text Symptom Logger (Sarvam AI):** Speak symptoms naturally and let the AI automatically suggest the right diagnostic path.  
 ✅ **Text-to-Speech Accessibility (Sarvam AI):** Listen to diagnosis results and treatment steps completely in regional languages.  
-✅ **Splash Cursor Effect:** Premium WebGL fluid simulation that follows the user's cursor.  
-✅ **Dynamic Treatment Guides:** Real-time recovery and prevention steps tailored to the selected disease.  
+✅ **Cinematic Glassmorphism UI:** Premium WebGL fluid simulation (Splash Cursor), custom-styled themed dropdowns, and GSAP animations.  
 ✅ **High Accuracy Models:** Trained on curated poultry datasets with 98%+ accuracy for the external lesion module.  
 ✅ **Prediction History:** Securely save and view past diagnosis results using Firebase.  
 
@@ -51,8 +53,10 @@ ChickTech-AI-Diagnosis/
 │
 ├── backend/                 # Flask Backend
 │   ├── models/              # Trained .h5 models and metrics
-│   ├── app.py               # API Entry Point
+│   ├── app.py               # API Entry Point (with strict security)
 │   ├── predict.py           # Generic Predictor Class
+│   ├── rag_engine.py        # Gemini + SentenceTransformers RAG Pipeline
+│   ├── knowledge_base.json  # Vector database seed chunks
 │   └── train_external_lesion.py # Training script for new model
 │
 ├── datasets/                # Training data (ignored)

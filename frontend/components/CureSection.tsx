@@ -24,6 +24,7 @@ import {
 import LiquidEther from "@/components/reactbits/liquid-ether";
 import { useLanguage } from "@/context/LanguageContext";
 import TTSButton from "@/components/TTSButton";
+import RAGTreatmentPanel from "@/components/RAGTreatmentPanel";
 
 type DiseaseTab = "coccidiosis" | "external-lesion";
 
@@ -362,7 +363,7 @@ export default function CureSection() {
         <section
             id="cure-section"
             ref={sectionRef}
-            className="relative py-32 overflow-hidden bg-linear-to-b from-red-50 via-white to-orange-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900"
+            className="relative py-32 overflow-hidden min-h-screen bg-linear-to-b from-red-50 via-white to-orange-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900"
         >
             <LiquidEther
                 colors={["#f87171", "#fbbf24", "#fb923c", "#facc15"]}
@@ -544,6 +545,9 @@ export default function CureSection() {
                         </div>
                     </>
                 )}
+
+                {/* AI Treatment Plan Generator (RAG) */}
+                <RAGTreatmentPanel disease={activeTab === "coccidiosis" ? "coccidiosis" : "fowlpox"} />
 
                 {/* Disclaimer */}
                 <div className="mt-16 max-w-3xl mx-auto text-center">

@@ -16,4 +16,8 @@ scikit-learn
 python-dotenv
 requests
 cachetools
+google-genai
+sentence-transformers
+flask-limiter
+pybloom_live
 # -e .
