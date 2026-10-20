@@ -1,5 +1,7 @@
 # 🐔 ChickTech — AI-Powered Chicken Disease Diagnosis
 
+# PUBLISHED AT ICCCNET2026 AS A RESEARCH PAPER
+
 ## 🐣 About
 
 **ChickTech** is an AI-powered chicken disease diagnosis platform that leverages **deep learning** to identify poultry diseases. It combines a powerful **Flask backend** for AI inference and a **Next.js frontend** for an interactive, cinematic user experience.
